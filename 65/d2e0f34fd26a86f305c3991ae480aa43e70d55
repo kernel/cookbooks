@@ -1,0 +1,26 @@
+modal-pr-qa-agent/kernel_pr_qa_agent.py
+  s_22b507704d841b::t_d7253f1c4d7903 1-738
+modal-pr-qa-agent/README.md
+  s_22b507704d841b::t_ea4fddc84323cf 1-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "65d2e0f34fd26a86f305c3991ae480aa43e70d55",
+  "prompts": {},
+  "humans": {
+    "h_a435c0ae627c8b": {
+      "author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  },
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
