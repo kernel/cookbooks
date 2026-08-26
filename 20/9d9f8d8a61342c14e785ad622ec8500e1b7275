@@ -1,0 +1,25 @@
+modal-pr-qa-agent/README.md
+  s_22b507704d841b::t_0a10f7470217a4 34-35
+  s_22b507704d841b::t_aac09d6a2823ad 5-13,26-32,36-57
+  s_22b507704d841b::t_62cefe312641bb 33
+modal-web-scraper/README.md
+  s_22b507704d841b::t_7fe6e436f46754 5-12,32-34,37-49,51-58
+  s_22b507704d841b::t_62cefe312641bb 36
+  s_22b507704d841b::t_0a10f7470217a4 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "209d9f8d8a61342c14e785ad622ec8500e1b7275",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
