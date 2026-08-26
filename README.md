@@ -19,7 +19,3 @@ Runnable examples pairing [Kernel](https://www.kernel.sh) browsers with the rest
 | [modal-pr-qa-agent](modal-pr-qa-agent/) | QAs a PR preview with Claude computer use driving a Kernel browser, recorded with Replays |
 
 Docs: [kernel.sh/docs](https://kernel.sh/docs)
-
-## License
-
-MIT
