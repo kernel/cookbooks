@@ -1,0 +1,16 @@
+# Extension directories (can be re-downloaded from Chrome Web Store)
+extensions/
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+
+# Environment files
+.env
+.env.local
+
+# Build outputs
+dist/
+build/
