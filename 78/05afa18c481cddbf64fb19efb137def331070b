@@ -1,0 +1,31 @@
+integrations/stagehand-google-cua-agent/.env-example
+  s_22b507704d841b::t_05bb88cadf38e2 1-3
+integrations/stagehand-google-cua-agent/.gitignore
+  s_22b507704d841b::t_a13396cf04fe30 1-39
+integrations/stagehand-google-cua-agent/CLAUDE.md
+  s_22b507704d841b::t_fdcf34cd781495 1-88
+integrations/stagehand-google-cua-agent/README.md
+  s_22b507704d841b::t_81b2205a6cc702 1-51
+integrations/stagehand-google-cua-agent/index.ts
+  s_22b507704d841b::t_91c5964081fbb8 1-131
+integrations/stagehand-google-cua-agent/package.json
+  s_22b507704d841b::t_3fc35220365a6a 1-14
+integrations/stagehand-google-cua-agent/tsconfig.json
+  s_22b507704d841b::t_509b8540f7b028 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "7805afa18c481cddbf64fb19efb137def331070b",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
