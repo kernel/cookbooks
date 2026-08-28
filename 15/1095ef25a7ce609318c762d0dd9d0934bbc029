@@ -1,0 +1,35 @@
+features/file-io/.gitattributes
+  s_22b507704d841b::t_2256e83b1fab45 1-2
+features/file-io/.gitignore
+  s_22b507704d841b::t_1f81347e7f022f 1-65
+features/file-io/CLAUDE.md
+  s_22b507704d841b::t_755581819806c6 1-53
+features/file-io/README.md
+  s_22b507704d841b::t_ee5479126942ef 1-118
+features/file-io/downloads/receipt_110011001.pdf
+  s_22b507704d841b::t_b63665e7c95ec2 1-93
+features/file-io/main.py
+  s_22b507704d841b::t_3027172601e228 1-101
+features/file-io/pyproject.toml
+  s_22b507704d841b::t_c5e1b2ec1c8120 1-13
+features/file-io/session.py
+  s_22b507704d841b::t_2c10abf6cb3524 1-85
+features/file-io/uv.lock
+  s_22b507704d841b::t_a7032620b0899b 1-4706
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "151095ef25a7ce609318c762d0dd9d0934bbc029",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
