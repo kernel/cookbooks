@@ -45,14 +45,15 @@
 # ```
 #
 # Extraction runs on an open-weights model you serve yourself on a Modal
-# [Endpoint](https://modal.com/docs/guide/endpoints). Create it once (it scales to zero when
-# idle), mint a proxy token so the scraper can authenticate to it, and store the token as a
-# secret:
+# [Endpoint](https://modal.com/docs/guide/endpoints). Mint a proxy token so the scraper can
+# authenticate to it (an authenticated Endpoint won't deploy in a workspace with no proxy
+# tokens), store the token as a secret, then create the Endpoint once (it scales to zero
+# when idle):
 #
 # ```
-# modal endpoint create --model Qwen/Qwen3.5-4B --name example-kernel-webscraper --routing-region us-west
 # modal workspace proxy-tokens create
 # modal secret create modal-proxy-tokens MODAL_KEY=<token-id> MODAL_SECRET=<token-secret>
+# modal endpoint create --model Qwen/Qwen3.5-4B --name example-kernel-webscraper --routing-region us-west
 # ```
 
 from typing import Optional
@@ -76,9 +77,9 @@ ENDPOINT_WARMUP_TIME = (
 # into the image; here the browser runs on Kernel and we only connect to it over CDP, so the
 # image stays small and fast to build.
 image = modal.Image.debian_slim(python_version="3.11").uv_pip_install(
-    "kernel==0.74.0",
-    "playwright~=1.61.0",
-    "openai~=2.44.0",
+    "kernel==0.96.0",
+    "playwright~=1.62.0",
+    "openai~=3.5.0",
 )
 
 app = modal.App("example-kernel-webscraper", image=image)
@@ -257,6 +258,8 @@ async def scrape(
     from kernel import AsyncKernel
     from playwright.async_api import (
         TimeoutError as PlaywrightTimeoutError,
+    )
+    from playwright.async_api import (
         async_playwright,
     )
 
