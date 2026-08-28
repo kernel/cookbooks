@@ -1,0 +1,43 @@
+features/proxies/.gitignore
+  s_22b507704d841b::t_0ccf50bee8dafa 1-74
+features/proxies/check_region.py
+  s_22b507704d841b::t_ca9f09224dac3b 1,3-5,7-8,15,19,21-22,24-25,27-32,35-37,41-44,48-62,64-77,79-86,88-95,97-104,106-112
+  s_22b507704d841b::t_b756941b588d3d 2,6,9-14,16-18,20,23,26,33-34,38-40,45-47,63,78,87,96,105
+features/proxies/pyproject.toml
+  s_22b507704d841b::t_7ba70de7ce32a3 8-9
+  s_22b507704d841b::t_595c891dc2f39e 1-7,10-11
+features/proxies/uv.lock
+  s_22b507704d841b::t_69fb887dd1aede 1-4712,4733
+  s_22b507704d841b::t_e5d2a83a649a29 4713-4732,4734-5381
+features/proxies/main.py
+  s_22b507704d841b::t_b756941b588d3d 2-4,9,12,15-17,24-28
+  s_22b507704d841b::t_30679c27b3810b 1,5-8,10-11,13-14,18-23,29-35
+features/proxies/CLAUDE.md
+  s_22b507704d841b::t_29384efe665a68 33-34,37-41
+  s_22b507704d841b::t_83f4ef147580be 1-12,15,17,28-32,35-36,42-45,47-52,54-61,63-64,70-73,75-117
+  s_22b507704d841b::t_2f64744ae52dcc 13,16,18-27
+  s_22b507704d841b::t_b756941b588d3d 65-69
+  s_22b507704d841b::t_857eaac45dde26 14,46,53,62,74
+features/proxies/README.md
+  s_22b507704d841b::t_abe6a6157a538f 106,109,112,114-129,132-133
+  s_22b507704d841b::t_be543db58fbe1f 102-103
+  s_22b507704d841b::t_ee8d68c6647cd0 90,137-138
+  s_22b507704d841b::t_857eaac45dde26 83,107
+  s_22b507704d841b::t_b3252213367284 1-82,84-89,91-101,104-105,108,110-111,113,130-131,134-136,139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "1634cc0c5c8a792bfd727366c688b86b056f9373",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
