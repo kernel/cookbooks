@@ -1,0 +1,56 @@
+integrations/claude-managed-agents/src/lead-intel.ts
+  s_22b507704d841b::t_b756941b588d3d 56-58
+  s_22b507704d841b::t_3882fecc8a549f 1-55,59-75
+integrations/claude-managed-agents/examples/lead-intel-modal.md
+  s_22b507704d841b::t_857eaac45dde26 20,25,27-31,33-34,40,42-43,45-50,52-53
+  s_22b507704d841b::t_fff9d178890014 1-19,21-24,26,32,35-39,41,44,51,54-63
+integrations/claude-managed-agents/.gitignore
+  s_22b507704d841b::t_a19141c912522a 1-18
+integrations/claude-managed-agents/tsconfig.json
+  s_22b507704d841b::t_12a1a784bf581f 1-13
+integrations/claude-managed-agents/src/ux-swarm.ts
+  s_22b507704d841b::t_eac1138133b2a5 1-56,60-62,68-76
+  s_22b507704d841b::t_b756941b588d3d 57-59,63-67
+integrations/claude-managed-agents/.env.example
+  s_22b507704d841b::t_80b56d908cf607 1-5
+integrations/claude-managed-agents/README.md
+  s_22b507704d841b::t_47c668595a97ff 46-47
+  s_22b507704d841b::t_43d13594f01663 1-9,11-13,15-37,39-40,42-43,45,48-55,57-76,78,80-105
+  s_22b507704d841b::t_857eaac45dde26 10,14,38,41,44,56,77,79
+integrations/claude-managed-agents/package.json
+  s_22b507704d841b::t_23c93383edb09a 14
+  s_22b507704d841b::t_9662152adac6d6 1-13,15-21
+integrations/claude-managed-agents/src/teardown.ts
+  s_22b507704d841b::t_b756941b588d3d 49-52
+  s_22b507704d841b::t_8bbb675210f23d 1-48,53-86
+integrations/claude-managed-agents/package-lock.json
+  s_22b507704d841b::t_5d1f514f01907e 1-640
+integrations/claude-managed-agents/examples/ux-swarm-kernel-sh.md
+  s_22b507704d841b::t_857eaac45dde26 22-23,28-30,32-35,38,42,46,52
+  s_22b507704d841b::t_4da4e7c0415eea 1-21,24-27,31,36-37,39-41,43-45,47-51,53-62
+integrations/claude-managed-agents/src/setup.ts
+  s_22b507704d841b::t_b756941b588d3d 9,41-43,114
+  s_22b507704d841b::t_d45175f1a97d0d 49-55,63
+  s_22b507704d841b::t_8ad619b2b99791 1-8,10-40,44-48,56-62,64-113,115-120
+integrations/claude-managed-agents/src/config.ts
+  s_22b507704d841b::t_edfad29eea4c13 1-9,11-43,46,58-59,61-153,157-177,182-214,217-232,235-254,256-319,324-334,339-343,348,353-419
+  s_22b507704d841b::t_14bf8d1e1ddf4f 255
+  s_22b507704d841b::t_23d757ed5a6e95 47-57,60
+  s_22b507704d841b::t_b756941b588d3d 10,44-45,154-156,178-181,215-216,233-234,320-323,335-338,344-347,349-352
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "64bc32cf80f93d7bf76daaa8f5e70d0422c40126",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
