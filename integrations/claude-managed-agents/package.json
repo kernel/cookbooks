@@ -1,0 +1,21 @@
+{
+  "name": "kernel-managed-agents-cookbook",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Drive the Kernel (kernel.sh) API/CLI from Claude Managed Agents, with secrets injected via an environment_variable vault credential",
+  "scripts": {
+    "setup": "tsx src/setup.ts",
+    "ux-swarm": "tsx src/ux-swarm.ts",
+    "lead-intel": "tsx src/lead-intel.ts",
+    "teardown": "tsx src/teardown.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.122.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "tsx": "^4.20.0",
+    "typescript": "^5.6.0"
+  }
+}
