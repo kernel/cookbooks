@@ -1,0 +1,22 @@
+integrations/modal-pr-qa-agent/README.md
+  s_22b507704d841b::t_6fa9e960dea3ea 33-36
+integrations/modal-web-scraper/README.md
+  s_22b507704d841b::t_d6723f0b6d56d1 20,23
+  s_22b507704d841b::t_840ebcc5f07e70 24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "d80f4232c25537baa44195603cbdf7f427f74809",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
