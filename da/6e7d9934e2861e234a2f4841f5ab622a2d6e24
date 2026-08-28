@@ -1,0 +1,29 @@
+integrations/claude-computer-use-loop/.gitignore
+  s_22b507704d841b::t_f753c37bc6d9bc 1-6
+integrations/claude-computer-use-loop/README.md
+  s_22b507704d841b::t_1d78621032abd5 1-57
+integrations/claude-computer-use-loop/index.ts
+  s_22b507704d841b::t_fe50cbefd02b4d 1-567
+integrations/claude-computer-use-loop/package.json
+  s_22b507704d841b::t_77dd0ec86024fa 1-23
+integrations/claude-computer-use-loop/pnpm-lock.yaml
+  s_22b507704d841b::t_5f040f28619be8 1-396
+integrations/claude-computer-use-loop/tsconfig.json
+  s_22b507704d841b::t_cc1efcdcc7b82a 1-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "da6e7d9934e2861e234a2f4841f5ab622a2d6e24",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
