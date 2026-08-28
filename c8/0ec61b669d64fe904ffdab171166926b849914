@@ -1,0 +1,39 @@
+integrations/openagi/.env.example
+  s_22b507704d841b::t_1bd895a7dc0859 1-3
+integrations/openagi/.gitignore
+  s_22b507704d841b::t_a7d77c02f127cf 1-179
+integrations/openagi/.python-version
+  s_22b507704d841b::t_e8ad5178846e2c 1
+integrations/openagi/README.md
+  s_22b507704d841b::t_408b56a147d8f4 1-172
+integrations/openagi/agent_default.py
+  s_22b507704d841b::t_62abc572ee9168 1-88
+integrations/openagi/agent_tasker.py
+  s_22b507704d841b::t_5306869fb95f35 1-97
+integrations/openagi/kernel_handler.py
+  s_22b507704d841b::t_178ab76af878c1 1-352
+integrations/openagi/kernel_provider.py
+  s_22b507704d841b::t_154eb8d64a9c09 1-123
+integrations/openagi/kernel_session.py
+  s_22b507704d841b::t_0183fbb86e612d 1-164
+integrations/openagi/pyproject.toml
+  s_22b507704d841b::t_103c4223019bf6 1-12
+integrations/openagi/uv.lock
+  s_22b507704d841b::t_d1b51f47a20ff0 1-1457
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "c80ec61b669d64fe904ffdab171166926b849914",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
