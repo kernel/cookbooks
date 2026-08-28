@@ -40,6 +40,7 @@ from tinker_cookbook.rl.types import (
     Action as TinkerAction,
 )
 from tinker_cookbook.rl.types import (
+    ActionExtra,
     Env,
     EnvGroupBuilder,
     Metrics,
@@ -52,8 +53,10 @@ from tinker_cookbook.rl.types import (
 from tinker_cookbook.tokenizer_utils import get_tokenizer
 from tinker_cookbook.utils import logtree
 
-from core.actions import TerminateAction, parse_action_from_response
+from core.actions import TerminateAction, parse_action_from_response, response_text_from_message
 from core.browser import KernelBrowserAdapter
+from core.prompts import MODEL_NAME as DEFAULT_MODEL_NAME
+from core.prompts import RENDERER_NAME as DEFAULT_RENDERER_NAME
 from core.reward_models.webjudge import Trajectory as WebJudgeTrajectory
 from core.reward_models.webjudge import WebJudge
 from core.tracking import (
@@ -80,9 +83,9 @@ AGENT_AUTH_EVALUATION_CRITERIA = """1. The agent must have navigated to an authe
 6. If the task asks for "first" input fields, only the initially visible fields need to be reported.
 7. The agent should not fill in or submit any forms - just identify the fields."""
 
-# Default model for agent auth training
-MODEL_NAME = "Qwen/Qwen3-VL-30B-A3B-Instruct"
-RENDERER_NAME = "qwen3_vl_instruct"
+# Default model for agent auth training (defined in core/prompts.py)
+MODEL_NAME = DEFAULT_MODEL_NAME
+RENDERER_NAME = DEFAULT_RENDERER_NAME
 
 
 @dataclass
@@ -214,12 +217,13 @@ class AgentAuthEnv(Env):
 
         return self.renderer.build_generation_prompt(self.conversation), self.stop_condition
 
-    async def step(self, action: TinkerAction) -> StepResult:
+    async def step(self, action: TinkerAction, *, extra: ActionExtra | None = None) -> StepResult:
         """
         Execute an action step.
 
         Args:
             action: Token IDs from the policy (Tinker's Action type)
+            extra: Optional action metadata from the rollout runner (e.g. stop reason)
 
         Returns:
             StepResult with reward, done flag, next observation
@@ -234,7 +238,9 @@ class AgentAuthEnv(Env):
 
         # Decode tokens to text
         response_text, parse_success = self.renderer.parse_response(action)
-        response_content = renderers.ensure_text(response_text.get("content", ""))
+        # Renderers differ in where they leave the <tool_call> block: Qwen3-VL keeps
+        # it in `content`, Qwen3.5/3.6 lift it into `tool_calls`. Normalize both.
+        response_content = response_text_from_message(response_text)
         self.last_response = response_content
 
         # Parse to our Action type

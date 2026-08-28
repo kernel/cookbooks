@@ -73,7 +73,7 @@ See [Kernel Browser Pools Documentation](https://www.onkernel.com/docs/browsers/
 
 ### 4. Run Your First Agent
 
-The agent is based on the [OSWorld](https://github.com/xlang-ai/OSWorld) computer use agent architecture (see [paper](https://arxiv.org/abs/2404.07972)). We use the Qwen3-VL variant since it supports fine-tuning the weights via Tinker.
+The agent is based on the [OSWorld](https://github.com/xlang-ai/OSWorld) computer use agent architecture (see [paper](https://arxiv.org/abs/2404.07972)). The default policy is `Qwen/Qwen3.6-35B-A3B`, a vision-language model Tinker both serves for sampling and fine-tunes with LoRA.
 
 ```bash
 # Run an agent on a website
@@ -115,7 +115,24 @@ uv run python -m scripts.evaluate \
 
 ### 7. Train with RL
 
-Run GRPO training on the training set:
+Smoke test the loop first. One step, one episode, one browser:
+
+```bash
+kernel browser-pool create --name tinker-rl-smoke --size 1 --stealth --timeout 300
+
+uv run python -m scripts.train \
+    --env agent_auth \
+    --pool-name tinker-rl-smoke \
+    --batch-size 1 --group-size 1 --max-tasks 1 --max-steps 1 \
+    --lora-rank 1 --max-tokens 128 \
+    --eval-every 0 --save-every 1 \
+    --acquire-timeout 180 \
+    --no-webjudge
+
+kernel browser-pool delete tinker-rl-smoke
+```
+
+Then run GRPO training on the training set:
 
 ```bash
 uv run python -m scripts.train \
@@ -126,6 +143,13 @@ uv run python -m scripts.train \
 ```
 
 Training outputs checkpoints to `./results/<run_name>/`. See the Tinker logs for checkpoint paths (e.g., `tinker://model_id/checkpoint_name`).
+
+**Base models get retired.** Tinker drops models from its supported list periodically, and training
+against a retired id fails with `400 - base_model <id> is not supported`. The default model and its
+renderer live in one place, `core/prompts.py` (`MODEL_NAME`, `RENDERER_NAME`); update them together
+when that happens. See the [Tinker deprecations page](https://tinker-docs.thinkingmachines.ai/tinker/model-deprecations)
+for replacements, and [docs/getting-started.md](docs/getting-started.md) for how to check what is
+currently served.
 
 ### 8. Evaluate the Trained Model
 
@@ -154,7 +178,7 @@ The agent follows a simple observation-action loop:
 ```
 ┌─────────────┐     ┌─────────────┐     ┌───────────────────┐
 │  Screenshot │────>│  VLM Agent  │────>│      Action       │
-│  (1920x1080)│     │ (Qwen3-VL)  │     │ (click,type,etc.) │
+│  (1920x1080)│     │  (Qwen VLM) │     │ (click,type,etc.) │
 └─────────────┘     └─────────────┘     └───────────────────┘
        ▲                                          │
        │                                          ▼

@@ -626,6 +626,76 @@ def parse_tool_call(response: str) -> dict | None:
         return None
 
 
+def _flatten_content(content: object) -> str:
+    """Flatten a renderer message `content` field (str or list of parts) to text."""
+    if content is None:
+        return ""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts: list[str] = []
+        for part in content:
+            if isinstance(part, str):
+                parts.append(part)
+                continue
+            if isinstance(part, dict):
+                if part.get("type") in (None, "text"):
+                    parts.append(str(part.get("text", "")))
+                continue
+            text = getattr(part, "text", None)
+            if isinstance(text, str):
+                parts.append(text)
+        return "".join(parts)
+    return str(content)
+
+
+def response_text_from_message(message: Any) -> str:
+    """
+    Rebuild the raw response text from a renderer-parsed assistant message.
+
+    Renderers differ in where they leave tool calls. Qwen3-VL-era renderers keep
+    the literal `<tool_call>...</tool_call>` block inside `content`, while the
+    Qwen3.5/3.6 renderers lift it out into a structured `tool_calls` list. The
+    action parser works on the raw text form, so re-emit any structured calls as
+    `<tool_call>` blocks. Messages that already carry the block in `content` pass
+    through unchanged.
+
+    Args:
+        message: Message dict returned by `Renderer.parse_response`.
+
+    Returns:
+        Response text containing `Action:` line and `<tool_call>` block(s).
+    """
+    get = message.get if hasattr(message, "get") else lambda k, d=None: getattr(message, k, d)
+    text = _flatten_content(get("content"))
+
+    blocks: list[str] = []
+    for call in get("tool_calls") or []:
+        function = call.get("function") if hasattr(call, "get") else getattr(call, "function", None)
+        if function is None:
+            continue
+        if hasattr(function, "get"):
+            name, raw_args = function.get("name"), function.get("arguments")
+        else:
+            name, raw_args = getattr(function, "name", None), getattr(function, "arguments", None)
+        if isinstance(raw_args, str):
+            try:
+                arguments = json.loads(raw_args)
+            except json.JSONDecodeError:
+                continue
+        elif isinstance(raw_args, dict):
+            arguments = dict(raw_args)
+        else:
+            continue
+        payload = json.dumps({"name": name, "arguments": arguments})
+        blocks.append(f"<tool_call>\n{payload}\n</tool_call>")
+
+    if not blocks:
+        return text
+    prefix = [text.rstrip()] if text.strip() else []
+    return "\n".join(prefix + blocks)
+
+
 def parse_action_from_response(
     response: str,
     extra_actions: list[type[Action]] | None = None,

@@ -58,6 +58,8 @@ from rich.console import Console
 from rich.table import Table
 from tinker_cookbook.rl import train
 
+from core.prompts import MODEL_NAME as DEFAULT_MODEL
+from core.prompts import RENDERER_NAME
 from core.tracking import generate_id, init_raindrop, is_raindrop_enabled, shutdown_raindrop
 
 console = Console()
@@ -68,9 +70,6 @@ logging.getLogger("httpcore").setLevel(logging.WARNING)
 
 # Available environments
 AVAILABLE_ENVS = ["agent_auth"]
-
-# Default model for training
-DEFAULT_MODEL = "Qwen/Qwen3-VL-30B-A3B-Instruct"
 
 
 @dataclass
@@ -376,6 +375,9 @@ async def train_main(cfg: TrainConfig) -> int:
     console.print("\n[bold blue]Starting training...[/]")
     train_config = train.Config(
         model_name=cfg.model_name,
+        # renderer_name is stamped into checkpoint metadata and validated on resume.
+        renderer_name=RENDERER_NAME,
+        recipe_name=f"kernel-tinker-rl/{cfg.env}",
         log_path=log_path,
         dataset_builder=dataset_builder,
         learning_rate=cfg.learning_rate,

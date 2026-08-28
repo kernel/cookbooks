@@ -116,7 +116,85 @@ Notes:
 
 ## Step 4: Start Training
 
+### Check Which Base Models Tinker Serves
+
+Tinker retires base models periodically. The default here is `Qwen/Qwen3.6-35B-A3B`, set once in
+`core/prompts.py` (`MODEL_NAME` and `RENDERER_NAME`) and imported by the scripts. Before a long run,
+confirm it is still served:
+
+```bash
+uv run python -c "
+import tinker
+for m in tinker.ServiceClient().get_server_capabilities().supported_models:
+    print(m.model_name)
+"
+```
+
+If the default is gone, training fails immediately with
+`400 - base_model <id> is not supported`. Check the [Tinker deprecations
+page](https://tinker-docs.thinkingmachines.ai/tinker/model-deprecations) for the named replacement, then update
+`MODEL_NAME` and `RENDERER_NAME` in `core/prompts.py` together. The renderer must match the model
+family; `tinker_cookbook.model_info.get_recommended_renderer_names(model_name)` tells you which ones
+are valid.
+
+The policy must be vision-capable. Check with:
+
+```bash
+uv run python -c "
+from tinker_cookbook.model_info import get_model_attributes
+print(get_model_attributes('Qwen/Qwen3.6-35B-A3B').is_vl)
+"
+```
+
 Run the RL training loop. Results are saved to `./results/<run_name>/` by default.
+
+### Smoke Test the Full Loop
+
+The cheapest run that exercises browsers, sampling, Tinker training, and checkpointing end to end:
+
+```bash
+kernel browser-pool create --name tinker-rl-smoke --size 1 --stealth --timeout 300
+
+uv run python -m scripts.train \
+  --env agent_auth \
+  --pool-name tinker-rl-smoke \
+  --batch-size 1 --group-size 1 --max-tasks 1 --max-steps 1 \
+  --lora-rank 1 --max-tokens 128 \
+  --eval-every 0 --save-every 1 \
+  --acquire-timeout 180 \
+  --no-webjudge
+
+kernel browser-pool delete tinker-rl-smoke
+```
+
+One step takes about 70 seconds and writes `results/<run_name>/checkpoints.jsonl` with `tinker://`
+state and sampler paths.
+
+Wait for the pool to report an available browser (`kernel browser-pool list`) before starting.
+Acquiring from a pool that is still filling fails with `Request timed out`, and the episode is
+scored `env/all/browser_corrupted = 1.0` with no rollout.
+
+A healthy run reports no `env/all/parse_error` metric. If you see `env/all/parse_error = 1.0`, the
+policy's output does not match the tool-call format in `core/prompts.py`.
+
+To also exercise the reward model without OpenRouter credits, point WebJudge at any
+OpenAI-compatible endpoint:
+
+```bash
+WEBJUDGE_BASE_URL=https://api.openai.com/v1 \
+OPENROUTER_API_KEY=$OPENAI_API_KEY \
+uv run python -m scripts.train \
+  --env agent_auth \
+  --pool-name tinker-rl-smoke \
+  --batch-size 1 --group-size 1 --max-tasks 1 --max-steps 3 \
+  --lora-rank 1 --max-tokens 128 \
+  --eval-every 0 --save-every 1 \
+  --acquire-timeout 180 \
+  --webjudge-model gpt-4.1-mini
+```
+
+This adds `env/all/webjudge_score` and `env/all/webjudge_success` to the metrics table. An untrained
+policy usually scores 0 on a 3-step budget; that is expected, not a failure.
 
 ### Training on the Full Dataset
 

@@ -32,7 +32,8 @@ import modal
 APP_NAME = "qwen3-vl-vllm"
 
 # Model configuration
-BASE_MODEL = "Qwen/Qwen3-VL-30B-A3B-Instruct"
+# Keep in sync with MODEL_NAME in core/prompts.py (this file runs standalone on Modal).
+BASE_MODEL = "Qwen/Qwen3.6-35B-A3B"
 MERGED_MODEL_NAME = "merged-finetuned"  # Name for merged model in volume
 GPU_TYPE = "H100"
 GPU_COUNT = 1

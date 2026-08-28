@@ -14,14 +14,14 @@ Usage:
     from examples.agent_auth.evaluator import AgentAuthSamplingEvaluator
 
     evaluator = AgentAuthSamplingEvaluator(
-        model_name="Qwen/Qwen3-VL-30B-A3B-Instruct",
+        model_name="Qwen/Qwen3.6-35B-A3B",
         tasks=tasks,
         pool_name="eval-browser-pool",
     )
 
     service_client = tinker.ServiceClient()
     sampling_client = service_client.create_sampling_client(
-        base_model="Qwen/Qwen3-VL-30B-A3B-Instruct",
+        base_model="Qwen/Qwen3.6-35B-A3B",
         model_path="tinker://...",
     )
 
@@ -49,8 +49,9 @@ from tinker_cookbook.image_processing_utils import get_image_processor
 from tinker_cookbook.renderers import ImagePart, TextPart
 from tinker_cookbook.tokenizer_utils import get_tokenizer
 
-from core.actions import TerminateAction, parse_action_from_response
+from core.actions import TerminateAction, parse_action_from_response, response_text_from_message
 from core.browser import KernelBrowserAdapter
+from core.prompts import RENDERER_NAME as DEFAULT_RENDERER_NAME
 from core.reward_models.webjudge import Trajectory as WebJudgeTrajectory
 from core.reward_models.webjudge import WebJudge
 from core.utils import resize_image
@@ -112,13 +113,13 @@ class AgentAuthSamplingEvaluator(SamplingClientEvaluator):
         config: EvalConfig | None = None,
         webjudge_model: str = "openai/gpt-5-mini",
         webjudge_enabled: bool = True,
-        renderer_name: str = "qwen3_vl_instruct",
+        renderer_name: str = DEFAULT_RENDERER_NAME,
     ):
         """
         Initialize the evaluator.
 
         Args:
-            model_name: Base model name (e.g., "Qwen/Qwen3-VL-30B-A3B-Instruct")
+            model_name: Base model name (e.g., "Qwen/Qwen3.6-35B-A3B")
             tasks: List of tasks to evaluate
             config: Evaluation configuration
             webjudge_model: Model to use for WebJudge scoring
@@ -290,7 +291,7 @@ class AgentAuthSamplingEvaluator(SamplingClientEvaluator):
                 # Parse response
                 tokens = response.sequences[0].tokens
                 response_msg, _ = self.renderer.parse_response(tokens)
-                response_content = renderers.ensure_text(response_msg.get("content", ""))
+                response_content = response_text_from_message(response_msg)
 
                 # Parse action
                 browser_action = parse_action_from_response(response_content, AGENT_AUTH_ACTIONS)

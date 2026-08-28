@@ -2,7 +2,7 @@
 System prompts for computer use agents.
 
 Provides utilities for building system prompts with embedded tool definitions
-in Qwen3-VL's native pre-training format.
+in Qwen's native computer-use format.
 
 Format overview:
 - Tool definitions embedded in system prompt within <tools></tools> XML tags
@@ -22,9 +22,12 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .actions import Action
 
-# Default model configuration
-MODEL_NAME = "Qwen/Qwen3-VL-30B-A3B-Instruct"
-RENDERER_NAME = "qwen3_vl"
+# Default model configuration.
+# Single source of truth: scripts and examples import these instead of hardcoding.
+# Tinker retires base models periodically, so verify this id is still served:
+# https://tinker-docs.thinkingmachines.ai/tinker/model-deprecations
+MODEL_NAME = "Qwen/Qwen3.6-35B-A3B"
+RENDERER_NAME = "qwen3_5_disable_thinking"
 
 # Default LoRA configuration
 DEFAULT_LORA_RANK = 8

@@ -12,20 +12,20 @@ Usage:
     # Evaluate a finetuned checkpoint
     uv run python -m scripts.tinker_evaluate \
         --model-path tinker://488643ee-3be8-523e-9297-aecf5f8bb48f:train:0/sampler_weights/final \
-        --base-model Qwen/Qwen3-VL-30B-A3B-Instruct \
+        --base-model Qwen/Qwen3.6-35B-A3B \
         --pool-name eval-browser-pool \
         --output results/finetuned_eval.json
 
     # Evaluate the base model (no finetuning)
     uv run python -m scripts.tinker_evaluate \
-        --base-model Qwen/Qwen3-VL-30B-A3B-Instruct \
+        --base-model Qwen/Qwen3.6-35B-A3B \
         --pool-name eval-browser-pool \
         --output results/baseline_eval.json
 
     # Evaluate with specific task file
     uv run python -m scripts.tinker_evaluate \
         --model-path tinker://... \
-        --base-model Qwen/Qwen3-VL-30B-A3B-Instruct \
+        --base-model Qwen/Qwen3.6-35B-A3B \
         --task-file examples/agent_auth/tasks_eval.jsonl \
         --output results/eval.json
 
@@ -54,6 +54,8 @@ from dotenv import load_dotenv
 from rich.console import Console
 from rich.table import Table
 
+from core.prompts import MODEL_NAME, RENDERER_NAME
+
 console = Console()
 
 # Suppress noisy loggers
@@ -61,7 +63,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("httpcore").setLevel(logging.WARNING)
 
 # Default models
-DEFAULT_BASE_MODEL = "Qwen/Qwen3-VL-30B-A3B-Instruct"
+DEFAULT_BASE_MODEL = MODEL_NAME
 DEFAULT_WEBJUDGE_MODEL = "openai/gpt-5-mini"
 
 
@@ -75,7 +77,7 @@ class TinkerEvalConfig:
     # Model parameters
     base_model: str = DEFAULT_BASE_MODEL
     model_path: str | None = None  # Tinker checkpoint path (e.g., tinker://...)
-    renderer_name: str = "qwen3_vl_instruct"
+    renderer_name: str = RENDERER_NAME
 
     # WebJudge parameters
     webjudge_model: str = DEFAULT_WEBJUDGE_MODEL
@@ -125,8 +127,8 @@ def parse_args() -> TinkerEvalConfig:
     )
     parser.add_argument(
         "--renderer-name",
-        default="qwen3_vl_instruct",
-        help="Tinker renderer name (default: qwen3_vl_instruct)",
+        default=RENDERER_NAME,
+        help=f"Tinker renderer name (default: {RENDERER_NAME})",
     )
 
     # WebJudge parameters

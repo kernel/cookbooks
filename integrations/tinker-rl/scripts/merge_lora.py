@@ -10,7 +10,7 @@ modules (like MoE expert layers).
 Usage:
     # Merge locally (requires ~80GB GPU memory for 30B model)
     uv run python -m scripts.merge_lora \
-        --base-model Qwen/Qwen3-VL-30B-A3B-Instruct \
+        --base-model Qwen/Qwen3.6-35B-A3B \
         --lora-path ./checkpoints/final \
         --output-path ./merged_model
 
@@ -27,12 +27,14 @@ import torch
 from peft import PeftModel
 from transformers import AutoModelForVision2Seq, AutoProcessor, AutoTokenizer
 
+from core.prompts import MODEL_NAME
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Merge LoRA adapter into base model")
     parser.add_argument(
         "--base-model",
-        default="Qwen/Qwen3-VL-30B-A3B-Instruct",
+        default=MODEL_NAME,
         help="HuggingFace model ID or local path for the base model",
     )
     parser.add_argument(

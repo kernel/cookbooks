@@ -159,6 +159,7 @@ from kernel import Kernel
 from PIL import Image
 from tinker_cookbook import renderers
 from tinker_cookbook.rl.types import (
+    ActionExtra,
     Env,
     EnvGroupBuilder,
     RLDataset,
@@ -170,7 +171,11 @@ from tinker_cookbook.rl.types import (
     Action as TinkerAction,
 )
 
-from core.actions import parse_action_from_response, TerminateAction
+from core.actions import (
+    TerminateAction,
+    parse_action_from_response,
+    response_text_from_message,
+)
 from core.browser import KernelBrowserAdapter
 from core.reward_models import WebJudge, Trajectory as WebJudgeTrajectory
 from core.utils import resize_image
@@ -253,13 +258,15 @@ class FormFillingEnv(Env):
 
         return self.renderer.build_generation_prompt(self.conversation), self.stop_condition
 
-    async def step(self, action: TinkerAction) -> StepResult:
+    async def step(self, action: TinkerAction, *, extra: ActionExtra | None = None) -> StepResult:
         """Execute one step in the environment."""
         self.step_count += 1
 
-        # Parse the action from tokens
+        # Parse the action from tokens. Renderers differ in where they leave the
+        # <tool_call> block: Qwen3-VL keeps it in `content`, Qwen3.5/3.6 lift it
+        # into `tool_calls`. response_text_from_message normalizes both.
         response_text, _ = self.renderer.parse_response(action)
-        response_content = renderers.ensure_text(response_text.get("content", ""))
+        response_content = response_text_from_message(response_text)
 
         browser_action = parse_action_from_response(
             response_content,
@@ -414,7 +421,7 @@ logger = logging.getLogger(__name__)
 
 
 class MyEnv(Env):
-    async def step(self, action):
+    async def step(self, action, *, extra=None):
         logger.info(f"Step {self.step_count}: {action}")
         # ...
 ```

@@ -25,6 +25,7 @@ from .actions import (
     TypeTextAction,
     WaitAction,
     parse_action_from_response,
+    response_text_from_message,
 )
 from .agent import AgentConfig, QwenAgent
 from .agent_loop import AgentLoopResult, StepResult, run_agent_loop
@@ -77,6 +78,7 @@ __all__ = [
     "WaitAction",
     "TerminateAction",
     "parse_action_from_response",
+    "response_text_from_message",
     # Browser
     "KernelBrowserAdapter",
     "MockBrowserAdapter",
