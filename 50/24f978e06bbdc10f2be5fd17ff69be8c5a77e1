@@ -1,0 +1,37 @@
+features/ad-blocker/examples/package.json
+  s_22b507704d841b::t_fcf5e7b45756a9 1-19
+features/ad-blocker/.gitignore
+  s_22b507704d841b::t_10c1cbbf82bf18 1-16
+features/ad-blocker/examples/tsconfig.json
+  s_22b507704d841b::t_4569033d7f888a 1-13
+features/ad-blocker/examples/test-adblocker.ts
+  s_22b507704d841b::t_c6ea77127b771e 1-2,4-8,10,12-13,16-17,20-32,34-41,48-52,61-69,72-80,83-85,87-88,90-101,104-106,108-113,116-119,121-125,127-132,134-135,137,139-142,144-153,157-161,165-166,171,173-177
+  s_22b507704d841b::t_b756941b588d3d 3,9,18-19,33,42-47,53-60,70-71,81-82,86,89,102-103,107,114-115,120,126,133,136,138,143,154-156,162-164,167-170,172
+  s_22b507704d841b::t_48ea1bf626e538 11,14-15
+features/ad-blocker/README.md
+  s_22b507704d841b::t_f53100cebe117a 255
+  s_22b507704d841b::t_3863279e51f419 112-120
+  s_22b507704d841b::t_ae340d8f79641c 94-102
+  s_22b507704d841b::t_c6fba4d8be6fa3 168-169,174-176
+  s_22b507704d841b::t_857eaac45dde26 29-34,53,128-129,140-141,145-146,148-149,152,191,213,216,223-224,235
+  s_22b507704d841b::t_45092d5f6298ee 247-248
+  s_22b507704d841b::t_60e0be31100330 1-28,35-52,54-93,103-111,121-127,130-139,142-144,147,150-151,153-167,170-173,177-190,192-212,214-215,217-222,225-234,236-246,249-254,256
+features/ad-blocker/examples/package-lock.json
+  s_22b507704d841b::t_56e635a49ef5c8 1-618
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "5024f978e06bbdc10f2be5fd17ff69be8c5a77e1",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
