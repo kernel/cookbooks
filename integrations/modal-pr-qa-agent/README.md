@@ -30,9 +30,10 @@ The demo QAs a working and a deliberately broken variant of a feedback form:
 
 ```
 Verifying the working variant: https://...--demo-app.modal.run/working
-watch live: https://<live-view-url>   <- open this to watch the agent drive
-  turn 1/22: [screenshot, left_click(...)]
-  turn 4/22: submit_verdict(pass)
+recording: https://<replay-view-url>   <- open this to watch the agent drive
+  turn 1/22: screenshot
+  turn 2/22: left_click, type, left_click, type, left_click, wait, screenshot
+  turn 3/22: submit_verdict(pass)
   -> pass: form submitted and confirmation appeared
   recording saved to Modal Volume: /traces/working.mp4
 

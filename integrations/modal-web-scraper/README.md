@@ -15,10 +15,12 @@ The scraper itself runs remotely on Python 3.11 (defined in the Modal image), so
 ```sh
 modal secret create kernel KERNEL_API_KEY=...
 modal secret create saucedemo-login TARGET_USERNAME=standard_user TARGET_PASSWORD=secret_sauce
-modal endpoint create --model Qwen/Qwen3.5-4B --name example-kernel-webscraper --routing-region us-west
 modal workspace proxy-tokens create
 modal secret create modal-proxy-tokens MODAL_KEY=<token-id> MODAL_SECRET=<token-secret>
+modal endpoint create --model Qwen/Qwen3.5-4B --name example-kernel-webscraper --routing-region us-west
 ```
+
+The proxy token must exist before `modal endpoint create`: an authenticated Endpoint refuses to deploy in a workspace with no proxy tokens. Endpoints also run on datacenter GPUs (an H100 for this model), which Modal only provisions for workspaces with a payment method on file.
 
 ## Run
 
