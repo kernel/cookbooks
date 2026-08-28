@@ -1,0 +1,27 @@
+features/ad-blocker/.gitignore
+  s_22b507704d841b::t_10c1cbbf82bf18 1-16
+features/ad-blocker/CLI_COMMANDS.md
+  s_22b507704d841b::t_f56571edc2493a 1-123
+features/ad-blocker/README.md
+  s_22b507704d841b::t_60e0be31100330 1-235
+features/ad-blocker/TEST_RESULTS.md
+  s_22b507704d841b::t_642b0b791a9f06 1-173
+features/ad-blocker/examples/test-adblocker.ts
+  s_22b507704d841b::t_c6ea77127b771e 1-170
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "945a5ad26d9979b05ca97c64510bb47e73446889",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
