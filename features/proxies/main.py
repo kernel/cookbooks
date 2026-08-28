@@ -28,8 +28,23 @@ async def verify_regional_sites_available(
         {"country": "RU"},
     ]
 
-    # Check all regions in parallel
+    # Check all regions in parallel. return_exceptions=True keeps one failing
+    # region from discarding the results of the other four.
     tasks = [check_region(config, website, ctx) for config in configs]
-    results = await asyncio.gather(*tasks)
+    results = await asyncio.gather(*tasks, return_exceptions=True)
 
-    return {"results": list(results)}
+    return {
+        "results": [
+            result
+            if not isinstance(result, BaseException)
+            else {
+                "country": config["country"],
+                "site_content_available": "no",
+                "final_url": "",
+                "page_title": "",
+                "detected_language": "",
+                "error": str(result),
+            }
+            for config, result in zip(configs, results)
+        ]
+    }

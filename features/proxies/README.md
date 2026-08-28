@@ -99,7 +99,7 @@ Learn more in the [Kernel Proxies Documentation](https://www.kernel.sh/docs/prox
 
 ## Setup
 
-Note: creating proxies is available on all plans, but attaching a proxy to a browser requires a paid Kernel plan. On the free tier the demo runs but each region check returns a 403 insufficient_plan error.
+Note: creating proxies is available on all plans, but attaching a proxy to a browser requires a paid Kernel plan.
 
 This project uses [uv](https://docs.astral.sh/uv/) for Python dependency management (requires Python >= 3.11).
 
@@ -115,6 +115,8 @@ uv sync
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `KERNEL_API_KEY` | Authenticates the Kernel CLI/SDK locally (or use `kernel login`). Inside a deployed app this variable is reserved and injected automatically by Kernel.            |
 | `GOOGLE_API_KEY` | Gemini API key used by Browser Use's `ChatGoogle(model="gemini-flash-latest")` (get one at https://aistudio.google.com/apikey). `GEMINI_API_KEY` also works, but `GOOGLE_API_KEY` takes precedence when both are set. |
+
+Each region runs a multi-step Browser Use agent, so one 5-region run makes well over 20 Gemini calls. The Gemini free tier caps `gemini-flash-latest` at 20 requests per day, which a single run exhausts (subsequent steps fail with `429 RESOURCE_EXHAUSTED`). Use a key with paid Gemini quota.
 
 **Deploy and invoke the app:**
 

@@ -35,8 +35,13 @@ async def check_region(config: dict, website: str, ctx: kernel.KernelContext) ->
             config=config,
         )
 
+        # Residential proxies add latency, so give the browser more headroom than
+        # the 60s default inactivity timeout before Kernel reclaims the session.
         kernel_browser = client.browsers.create(
-            invocation_id=ctx.invocation_id, stealth=True, proxy_id=proxy.id
+            invocation_id=ctx.invocation_id,
+            stealth=True,
+            proxy_id=proxy.id,
+            timeout_seconds=300,
         )
 
         browser = Browser(
@@ -105,8 +110,19 @@ async def check_region(config: dict, website: str, ctx: kernel.KernelContext) ->
             "error": str(e),
         }
     finally:
-        # Always delete the proxy, even if an error occurred
+        # Always clean up both resources, even if an error occurred. Each delete is
+        # guarded so a failed cleanup (e.g. a browser that already timed out returns
+        # 404) cannot skip the other delete or escape and fail the whole invocation.
         if proxy:
-            client.proxies.delete(proxy.id)
+            try:
+                client.proxies.delete(proxy.id)
+            except Exception as e:
+                print(f"[{country_code}] failed to delete proxy {proxy.id}: {e}")
         if kernel_browser:
-            client.browsers.delete_by_id(kernel_browser.session_id)
+            try:
+                client.browsers.delete_by_id(kernel_browser.session_id)
+            except Exception as e:
+                print(
+                    f"[{country_code}] failed to delete browser "
+                    f"{kernel_browser.session_id}: {e}"
+                )
