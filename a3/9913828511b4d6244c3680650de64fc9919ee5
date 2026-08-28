@@ -1,0 +1,39 @@
+integrations/vibium/python/kernel-vibium-python-example.py
+  s_22b507704d841b::t_b756941b588d3d 10
+  s_22b507704d841b::t_67d226585369a7 1-9,11-72
+integrations/vibium/ts/package.json
+  s_22b507704d841b::t_32a1a4b7419d97 11-12
+  s_22b507704d841b::t_9cad818457580d 1-10,13-18
+integrations/vibium/ts/kernel-vibium-node-example.ts
+  s_22b507704d841b::t_6ba22a1ea50a17 3-6,8,10-12,14-33,35,37-40,42-44,46-48,50-61,64-66
+  s_22b507704d841b::t_b756941b588d3d 1-2,7,9,13,34,36,41,45,49,62-63
+integrations/vibium/README.md
+  s_22b507704d841b::t_40b44a6b1ede58 1-36,38-103
+  s_22b507704d841b::t_b78afdaa703fb2 37
+integrations/vibium/cli/kernel-vibium-cli-example.sh
+  s_22b507704d841b::t_991f6d0bc00f1f 1-87
+integrations/vibium/python/requirements.txt
+  s_22b507704d841b::t_9656a4a2d91342 1-2
+integrations/vibium/ts/tsconfig.json
+  s_22b507704d841b::t_fc5a2bbc49713b 1-15
+integrations/vibium/.gitignore
+  s_22b507704d841b::t_79e9f5e3be31d6 1-6
+integrations/vibium/ts/package-lock.json
+  s_22b507704d841b::t_e25a79efc63744 1-179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "a39913828511b4d6244c3680650de64fc9919ee5",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
