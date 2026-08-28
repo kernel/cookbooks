@@ -1,0 +1,38 @@
+integrations/ai-sdk-agent/.env.example
+  s_22b507704d841b::t_6108e32f98aeb4 1-2
+integrations/ai-sdk-agent/tsconfig.json
+  s_22b507704d841b::t_b07051126ec29b 1-17
+integrations/ai-sdk-agent/src/index.ts
+  s_22b507704d841b::t_8d808ad180fea7 211-213
+  s_22b507704d841b::t_c4b50a9e6f010a 108
+  s_22b507704d841b::t_b756941b588d3d 1-2,5-9,16-20,25-27,29-33,37,39,41-42,44,54-55,59,62-63,70-77,81-84,86-89,93,98-102,124,127-149,152-161,167,174-176,178,180,183-191,193,195-199,201-210,216-218,221,225-229,231,235
+  s_22b507704d841b::t_1b50fcbf8a094f 3
+  s_22b507704d841b::t_fac562add4f88a 4,10-15,21-24,28,34-36,38,40,43,45-53,56-58,60-61,64-69,78-80,85,90-92,94-97,103-107,109-123,125-126,150-151,162-166,168-173,177,179,181-182,192,194,200,214-215,219-220,222-224,230,232-234,236-239
+integrations/ai-sdk-agent/README.md
+  s_22b507704d841b::t_857eaac45dde26 26,32,47,63
+  s_22b507704d841b::t_4dbf7f1305056f 1-25,27-31,33-46,48-62,64-79
+integrations/ai-sdk-agent/package.json
+  s_22b507704d841b::t_5694e89403ddf4 22-24
+  s_22b507704d841b::t_d54d4df32b5f80 1-21,25-37
+integrations/ai-sdk-agent/.gitignore
+  s_22b507704d841b::t_06a43991025f38 1-21
+integrations/ai-sdk-agent/package-lock.json
+  s_22b507704d841b::t_66207fa3ff79b8 1-1213,1216-1217,1219
+  s_22b507704d841b::t_f4f4514faedddb 1214-1215,1218,1220-1229
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "595fccb74a008e4a3f1b46905434833bac3fdb52",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
