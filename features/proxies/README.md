@@ -52,7 +52,7 @@ Testing IGN.com shows how the site serves different regional content:
     },
     {
       "country": "IN",
-      "detected_language": "en-in",
+      "detected_language": "en",
       "final_url": "https://in.ign.com/",
       "page_title": "IGN India",
       "site_content_available": "yes"
@@ -61,14 +61,16 @@ Testing IGN.com shows how the site serves different regional content:
       "country": "RU",
       "detected_language": "en",
       "final_url": "https://www.ign.com/",
-      "page_title": "Video Game News, Reviews, and ",
+      "page_title": "Video Game News, Reviews, and Walkthroughs - IGN",
       "site_content_available": "yes"
     }
   ]
 }
 ```
 
-Notice how Japan and India get redirected to regional subdomains with localized content!
+Japan and India get their own subdomains, Australia gets a country path, and Russia falls through to the US site. Only Japan actually switches language; the India site is regional but still English.
+
+These values come from an LLM reading the live page, so titles and language codes can vary slightly between runs.
 
 ## Kernel Proxies Feature
 
