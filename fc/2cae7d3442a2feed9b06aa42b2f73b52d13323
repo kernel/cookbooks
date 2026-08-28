@@ -1,0 +1,33 @@
+features/profiles/.env.example
+  s_22b507704d841b::t_acceb5ce069015 1-3
+features/profiles/.gitignore
+  s_22b507704d841b::t_8c0bdc96df21ab 1-39
+features/profiles/CLAUDE.md
+  s_22b507704d841b::t_ad07fce25116e3 1-46
+features/profiles/README.md
+  s_22b507704d841b::t_f8afc83c616b5b 1-249
+features/profiles/index.ts
+  s_22b507704d841b::t_d769a7cb9c9487 1-329
+features/profiles/package.json
+  s_22b507704d841b::t_f524baf31dcfbf 1-23
+features/profiles/pnpm-lock.yaml
+  s_22b507704d841b::t_8495c9c8c799a6 1-61
+features/profiles/tsconfig.json
+  s_22b507704d841b::t_6905dcbeff14af 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "fc2cae7d3442a2feed9b06aa42b2f73b52d13323",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
