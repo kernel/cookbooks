@@ -1,0 +1,18 @@
+{
+  "name": "vibium-kernel-examples-ts",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/kernel-vibium-node-example.js"
+  },
+  "dependencies": {
+    "@onkernel/sdk": "^0.96.0",
+    "vibium": "^26.8.21"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  }
+}
