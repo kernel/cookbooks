@@ -1,0 +1,27 @@
+integrations/browser-use-model/.gitignore
+  s_22b507704d841b::t_492f2d39847d67 1-74
+integrations/browser-use-model/README.md
+  s_22b507704d841b::t_4fb497f8d8a892 1-75
+integrations/browser-use-model/main.py
+  s_22b507704d841b::t_a6cc334fdbdcff 1-98
+integrations/browser-use-model/pyproject.toml
+  s_22b507704d841b::t_32a5f39709cb0a 1-11
+integrations/browser-use-model/uv.lock
+  s_22b507704d841b::t_7646f5c5bded17 1-4441
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "93b9fea8ca5d32c52f3101c6b87db14ebac4497b",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
