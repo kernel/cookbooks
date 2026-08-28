@@ -1,0 +1,21 @@
+ruff.toml
+  s_22b507704d841b::t_07fc89e90a01f4 1-8
+integrations/modal-web-scraper/kernel_webscraper.py
+  s_22b507704d841b::t_1c1a3ca1653e8f 260-261
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "a750f2fa5b16e7c7cbe2f0ca08c5e0d149cbec2f",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
