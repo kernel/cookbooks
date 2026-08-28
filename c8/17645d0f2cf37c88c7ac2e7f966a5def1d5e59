@@ -1,0 +1,33 @@
+integrations/modal-pr-qa-agent/kernel_pr_qa_agent.py
+  s_22b507704d841b::t_18bc944bac4538 58-60
+  s_22b507704d841b::t_6ce9dbe09591ea 401
+  s_22b507704d841b::t_4f7c34c8f58fdb 6,9,20,27,30,32,36-37,40,74,152,485,574-575,577-578,581,625,629,633-634,638-727,731
+  s_22b507704d841b::t_88d382944ba406 169
+  s_22b507704d841b::t_48556c478463c4 88,294-305
+  s_22b507704d841b::t_65af3f3a9b41a3 48-49
+  s_22b507704d841b::t_82dde52da52fe8 190-191
+  s_22b507704d841b::t_7da6a211063062 277-280
+  s_22b507704d841b::t_ee48f12dc15242 381-382
+  s_22b507704d841b::t_188efc440f3333 319-324
+integrations/modal-web-scraper/kernel_webscraper.py
+  s_22b507704d841b::t_46a90a6159acfe 48-51
+  s_22b507704d841b::t_01c8dbf9e4256d 79-81
+integrations/modal-pr-qa-agent/README.md
+  s_22b507704d841b::t_86c8523c85291d 33-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "c817645d0f2cf37c88c7ac2e7f966a5def1d5e59",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
