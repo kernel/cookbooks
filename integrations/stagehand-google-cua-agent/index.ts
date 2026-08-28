@@ -145,7 +145,13 @@ app.action<void, SearchQueryOutput>(
 
 // Run locally if executed directly (not imported as a module)
 // Execute via: npx tsx index.ts
-if (import.meta.url === `file://${process.argv[1]}`) {
+// The deployed Kernel runtime also executes this bundle directly, so check
+// for Kernel's injected KERNEL_INVOCATION marker to avoid running the task
+// (and exiting the process) at app boot, which would break action handling.
+if (
+  !process.env.KERNEL_INVOCATION &&
+  import.meta.url === `file://${process.argv[1]}`
+) {
   runStagehandTask()
     .then((result) => {
       console.log("Local execution result:", result);
