@@ -1,0 +1,35 @@
+features/replays/.gitattributes
+  s_22b507704d841b::t_0f98a4d77f5ed8 1-2
+features/replays/.gitignore
+  s_22b507704d841b::t_b16ebd47801da4 1-168
+features/replays/CLAUDE.md
+  s_22b507704d841b::t_9aa72168981fe9 1-129
+features/replays/README.md
+  s_22b507704d841b::t_07f81946574d86 1-288
+features/replays/demo-qa-agent.py
+  s_22b507704d841b::t_78fc5bd8e8ee27 1-164
+features/replays/main.py
+  s_22b507704d841b::t_baa871d70d2ae9 1-167
+features/replays/pyproject.toml
+  s_22b507704d841b::t_da93fca8436475 1-14
+features/replays/session.py
+  s_22b507704d841b::t_470e01b560b931 1-95
+features/replays/uv.lock
+  s_22b507704d841b::t_7aa716beebf062 1-4256
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "f5cc0c6d6ad68fc974cf0c2ee509794cc12839ca",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
