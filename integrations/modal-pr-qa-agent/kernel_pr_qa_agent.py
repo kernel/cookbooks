@@ -45,8 +45,8 @@ MINUTES = 60  # seconds, for readable timeouts
 VIEWPORT = {
     "width": 1280,
     "height": 800,
-}  # must equal the computer-use tool's display_*_px
-MODEL = "claude-sonnet-4-6"  # Sonnet is the sweet spot for computer use; swap to claude-opus-4-8 in one line for harder UIs
+}  # the toolset reads coordinates in screenshot pixel space, so keep captures at this size
+MODEL = "claude-sonnet-5"  # Sonnet is the sweet spot for computer use; swap to claude-opus-5 in one line for harder UIs
 MAX_ITERS = 22  # a two-field form needs only a few steps; this bounds cost and runtime
 TYPING_DELAY_MS = (
     12  # per-character typing delay (matches Kernel's public computer-use template)
@@ -55,9 +55,9 @@ SCREENSHOT_SETTLE_S = 2.0  # let the page react before each capture
 REPLAY_GRACE_S = 1.5  # let the final banner land in the recording before we stop it
 
 image = modal.Image.debian_slim(python_version="3.11").uv_pip_install(
-    "kernel==0.74.0",  # <1.0: pin exact patch per modal-examples policy
-    "anthropic==0.116.0",  # <1.0: pin exact patch
-    "fastapi==0.139.0",  # <1.0: pin exact patch
+    "kernel==0.96.0",  # <1.0: pin exact patch per modal-examples policy
+    "anthropic==1.2.0",
+    "fastapi==0.141.1",  # <1.0: pin exact patch
 )
 app = modal.App("example-kernel-pr-qa-agent", image=image)
 
@@ -165,12 +165,12 @@ SYSTEM_PROMPT = (
     "is absent."
 )
 
+# The GA computer-use toolset (required on Sonnet 5 / Opus 5; the older computer_20251124
+# beta tool is not supported there). Each action is its own member tool - the model emits
+# tool_use blocks named e.g. left_click / type / screenshot with toolset_name "computer" -
+# and coordinates are in the pixel space of the screenshots we return.
 TOOL = {
-    "type": "computer_20251124",
-    "name": "computer",
-    "display_width_px": VIEWPORT["width"],
-    "display_height_px": VIEWPORT["height"],
-    "display_number": 1,
+    "type": "computer_toolset_20260801",
 }
 # A strict tool for the final result, so the verdict is structured data (an enum + a reason)
 # instead of a sentinel string we parse out of the model's prose.
@@ -191,7 +191,8 @@ SUBMIT_VERDICT_TOOL = {
         "required": ["verdict", "reason"],
     },
 }
-BETAS = ["computer-use-2025-11-24", "prompt-caching-2024-07-31"]
+# computer_toolset_20260801 is GA - no computer-use beta flag needed anymore.
+BETAS = ["prompt-caching-2024-07-31"]
 
 # Map common key names to the xdotool keysyms Kernel's `computer` API expects. Adapted from
 # Kernel's public computer-use template (https://github.com/kernel/cli).
@@ -277,14 +278,13 @@ def _screenshot(client, sid: str) -> str:
     return base64.b64encode(raw).decode()
 
 
-def _execute(client, sid: str, inp: dict) -> None:
-    """Translate one Anthropic computer action into Kernel `computer` calls. There are no
-    per-action sleeps here; the settle delay in _screenshot gives the page time to react
-    before the next capture."""
+def _execute(client, sid: str, action: str, inp: dict) -> None:
+    """Translate one computer-toolset member call (`action` is the member tool's name, e.g.
+    "left_click") into Kernel `computer` calls. There are no per-action sleeps here; the
+    settle delay in _screenshot gives the page time to react before the next capture."""
     import time
 
     computer = client.browsers.computer
-    action = inp.get("action")
     coord = inp.get("coordinate")
     if coord and len(coord) >= 2:
         coord = [
@@ -295,26 +295,21 @@ def _execute(client, sid: str, inp: dict) -> None:
         coord = None
     text = inp.get("text")
 
-    if action in ("left_click", "click") and coord:
-        button = inp.get("button")
-        if button in ("right", "middle"):
-            computer.click_mouse(sid, x=coord[0], y=coord[1], button=button)
-        else:
-            computer.click_mouse(sid, x=coord[0], y=coord[1])
+    if action == "left_click" and coord:
+        computer.click_mouse(sid, x=coord[0], y=coord[1])
     elif action == "right_click" and coord:
         computer.click_mouse(sid, x=coord[0], y=coord[1], button="right")
+    elif action == "middle_click" and coord:
+        computer.click_mouse(sid, x=coord[0], y=coord[1], button="middle")
     elif action == "double_click" and coord:
         computer.click_mouse(sid, x=coord[0], y=coord[1], num_clicks=2)
     elif action == "triple_click" and coord:
         computer.click_mouse(sid, x=coord[0], y=coord[1], num_clicks=3)
     elif action == "type" and text:
         computer.type_text(sid, text=text, delay=TYPING_DELAY_MS)
-    elif action in ("key", "keypress"):
-        if text:
+    elif action == "key" and text:
+        for _ in range(max(int(inp.get("repeat") or 1), 1)):
             computer.press_key(sid, keys=[_to_xdotool(text)])
-        else:
-            for key in inp.get("keys", []):
-                computer.press_key(sid, keys=[_to_xdotool(key)])
     elif action == "scroll":
         if coord:
             cx, cy = coord[0], coord[1]
@@ -327,11 +322,12 @@ def _execute(client, sid: str, inp: dict) -> None:
         dx = notches if direction == "right" else -notches if direction == "left" else 0
         dy = notches if direction == "down" else -notches if direction == "up" else 0
         computer.scroll(sid, x=cx, y=cy, delta_x=dx, delta_y=dy)
-    elif action in ("mouse_move", "move") and coord:
+    elif action == "mouse_move" and coord:
         computer.move_mouse(sid, x=coord[0], y=coord[1])
     elif action == "wait":
         time.sleep(min(float(inp.get("duration") or 1.0), 5.0))
-    # "screenshot" and anything unrecognized: fall through; a fresh screenshot is taken below.
+    # "screenshot" and any other member (zoom, hold_key, ...): fall through; a fresh
+    # screenshot is taken below either way.
 
 
 def _inject_prompt_caching(messages: list, breakpoints: int = 3) -> None:
@@ -388,9 +384,8 @@ def _run_cua_loop(client, anthropic_client, sid: str, goal: str):
             print(f"  turn {i + 1}/{MAX_ITERS}: submit_verdict({verdict})")
             return verdict, str(inp.get("reason") or "").strip(), i + 1
 
-        actions = (
-            ", ".join(str(tu.input.get("action")) for tu in tool_uses) or "no action"
-        )
+        # With the toolset, each action is its own member tool call - the action is the name.
+        actions = ", ".join(tu.name for tu in tool_uses) or "no action"
         print(f"  turn {i + 1}/{MAX_ITERS}: {actions}")
 
         if not tool_uses:
@@ -409,7 +404,7 @@ def _run_cua_loop(client, anthropic_client, sid: str, goal: str):
         tool_results = []
         for tu in tool_uses:
             try:
-                _execute(client, sid, dict(tu.input))
+                _execute(client, sid, tu.name, dict(tu.input))
             except Exception as exc:
                 # A transient Kernel API error or a bad coordinate shouldn't kill a paid,
                 # non-idempotent run: note it and let the model re-plan from a fresh screenshot.
@@ -419,6 +414,7 @@ def _run_cua_loop(client, anthropic_client, sid: str, goal: str):
                     {
                         "type": "tool_result",
                         "tool_use_id": tu.id,
+                        "toolset_name": "computer",
                         "content": [
                             {
                                 "type": "image",
@@ -439,6 +435,7 @@ def _run_cua_loop(client, anthropic_client, sid: str, goal: str):
                     {
                         "type": "tool_result",
                         "tool_use_id": tu.id,
+                        "toolset_name": "computer",
                         "content": "screenshot failed; take another screenshot and continue",
                         "is_error": True,
                     }
