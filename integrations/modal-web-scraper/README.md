@@ -22,6 +22,8 @@ modal endpoint create --model Qwen/Qwen3.5-4B --name example-kernel-webscraper -
 
 The proxy token must exist before `modal endpoint create`: an authenticated Endpoint refuses to deploy in a workspace with no proxy tokens. Endpoints also run on datacenter GPUs (an H100 for this model), which Modal only provisions for workspaces with a payment method on file.
 
+`modal endpoint create` returns as soon as the Endpoint starts provisioning. Wait for `modal endpoint list` to report `live` (a few minutes) before the first run.
+
 ## Run
 
 ```sh
@@ -37,7 +39,7 @@ modal deploy kernel_webscraper.py                                           # da
 authenticated: profile saucedemo-scraper
 watch live: https://<live-view-url>   <- open this to watch the browser work
 waiting for the Endpoint to spin up...       <- first run only, ~1 minute
-{'url': 'https://www.saucedemo.com/inventory.html', 'products': [{'name': 'Sauce Labs Backpack', 'price': '$29.99', ...}]}
+{'url': 'https://www.saucedemo.com/inventory.html', 'products': [{'name': 'Sauce Labs Backpack', 'description': 'carry.allTheThings() with the sleek, streamlined Sly Pack...', 'price': '$29.99'}, ...]}
 ```
 
 Deployed runs write results to the `kernel-webscraper-results` Modal Volume, one JSON file per date. List them with `modal volume ls kernel-webscraper-results`.
@@ -53,7 +55,7 @@ Only scrape sites you're authorized to. The demo targets test sandboxes (saucede
 
 ## Troubleshooting
 
-- `waiting for the Endpoint to spin up...` repeats for a while: normal after idle, the Endpoint scales to zero and cold starts take about a minute. If it never resolves, check the Endpoint exists and matches `ENDPOINT_NAME`: `modal endpoint list`
+- `waiting for the Endpoint to spin up...` then no output for a while: normal after idle. The message prints once, then the run polls silently; the Endpoint scales to zero and cold starts take about a minute. If it never resolves, check the Endpoint exists, is `live`, and matches `ENDPOINT_NAME`: `modal endpoint list`. A freshly created Endpoint also spends several minutes in `provisioning` before its first call can succeed.
 - `Secret 'kernel' not found` (or `modal-proxy-tokens`, `saucedemo-login`): create the secrets with the exact names in Setup
 - `page load timed out`: the target was slow or blocked the load; rerun, or try `--no-with-auth` against a public page to isolate
 - `extraction produced no parseable output`: the model refused or truncated; rerun, and for very large pages consider a bigger `max_tokens` or model
