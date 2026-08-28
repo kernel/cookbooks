@@ -1,0 +1,19 @@
+[project]
+name = "file-io-demo"
+version = "0.1.0"
+description = "Receipt download automation script using Kernel browsers - Python"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["kernel>=0.96.0", "playwright>=1.62.0", "python-dotenv>=1.0.0"]
+
+[dependency-groups]
+dev = ["mypy>=1.15.0"]
+
+[tool.pyright]
+reportUnreachable = false
+
+[[tool.mypy.overrides]]
+# demo_site.py runs on Modal, not in this project's venv. Modal and FastAPI
+# are provided by the Modal CLI / remote image, so skip import checks here.
+module = ["modal", "modal.*", "fastapi", "fastapi.*"]
+ignore_missing_imports = true
