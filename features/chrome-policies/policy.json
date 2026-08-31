@@ -1,0 +1,6 @@
+{
+  "IncognitoModeAvailability": 1,
+  "BookmarkBarEnabled": true,
+  "DefaultBrowserSettingEnabled": false,
+  "HomepageLocation": "https://example.com/managed-by-enterprise-policy"
+}

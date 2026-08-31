@@ -1,0 +1,19 @@
+{
+  "name": "ad-blocker-example",
+  "private": true,
+  "type": "module",
+  "description": "Example script testing ad blocker extensions with Kernel browsers",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test-adblocker": "tsx test-adblocker.ts"
+  },
+  "dependencies": {
+    "@onkernel/sdk": "^0.96.0",
+    "playwright": "^1.62.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "tsx": "^4.19.0",
+    "typescript": "^5"
+  }
+}

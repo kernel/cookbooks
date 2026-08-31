@@ -1,0 +1,31 @@
+{
+  "name": "kernel-profiles-demo",
+  "module": "index.ts",
+  "type": "module",
+  "private": false,
+  "description": "Kernel profile-based browser automation demo with persistent authentication",
+  "author": "Kernel",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/onkernel/profiles-demo"
+  },
+  "keywords": [
+    "kernel",
+    "browser-automation",
+    "profiles",
+    "authentication",
+    "mcp",
+    "ai-automation"
+  ],
+  "devDependencies": {
+    "@types/node": "^24",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@onkernel/sdk": "^0.96.0",
+    "magnitude-core": "^0.2.31",
+    "playwright": "^1.62.0",
+    "zod": "^3.25.76"
+  }
+}

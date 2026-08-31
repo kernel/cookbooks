@@ -11,11 +11,43 @@
 
 # Kernel Cookbooks
 
-Runnable examples pairing [Kernel](https://www.kernel.sh) browsers with the rest of your stack. Each cookbook is a single documented file. Clone, set your secrets, run.
+End-to-end recipes for agents that use the internet, powered by [Kernel](https://www.kernel.sh). Each cookbook is self-contained: clone, set your secrets, run.
 
-| Cookbook | What it does |
-|---|---|
-| [modal-web-scraper](modal-web-scraper/) | Scrapes JS-rendered pages behind a login with a Kernel headful browser on Modal |
-| [modal-pr-qa-agent](modal-pr-qa-agent/) | QAs a PR preview with Claude computer use driving a Kernel browser, recorded with Replays |
+## Features
 
-Docs: [kernel.sh/docs](https://kernel.sh/docs)
+Kernel product features, each shown in a small runnable example.
+
+| Cookbook                                     | Description                                            |
+| -------------------------------------------- | ------------------------------------------------------ |
+| [proxies](features/proxies/)                 | Browser traffic routing through Kernel's proxy options |
+| [profiles](features/profiles/)               | Persistent browser session state, reused across runs   |
+| [replays](features/replays/)                 | Browser session recordings, downloadable as mp4        |
+| [file-io](features/file-io/)                 | Downloads, uploads, and browser filesystem access      |
+| [ad-blocker](features/ad-blocker/)           | Ad blocker extensions in Kernel browsers               |
+| [chrome-policies](features/chrome-policies/) | Chromium Enterprise Policies in browser sessions       |
+
+## Integrations
+
+Kernel paired with the rest of your stack.
+
+| Cookbook                                                               | Description                                                                                      |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [modal-web-scraper](integrations/modal-web-scraper/)                   | Web scraper for JS-rendered pages behind a login, on Modal with a Kernel headful browser         |
+| [modal-pr-qa-agent](integrations/modal-pr-qa-agent/)                   | PR preview QA agent with Claude computer use on Modal, recorded with Replays                     |
+| [claude-managed-agents](integrations/claude-managed-agents/)           | Claude Managed Agents recipes: parallel computer-use agent swarms, API keys secured via Vaults   |
+| [claude-computer-use-loop](integrations/claude-computer-use-loop/)     | Minimal implementation of Anthropic's computer use loop                                          |
+| [ai-sdk-agent](integrations/ai-sdk-agent/)                             | Natural language browser automation with the Vercel AI SDK and Kernel's Playwright execution API |
+| [stagehand-google-cua-agent](integrations/stagehand-google-cua-agent/) | Computer use agent with Google's Gemini 2.5 and Stagehand                                        |
+| [browser-use-model](integrations/browser-use-model/)                   | Browser Use bu-1.0 model on Kernel browser infrastructure                                        |
+| [mastra-web-task-assistant](integrations/mastra-web-task-assistant/)   | Human-in-the-loop web task assistant with memory, built on Mastra                                |
+| [vibium](integrations/vibium/)                                         | Vibium browser automation over WebDriver BiDi                                                    |
+| [tinker-rl](integrations/tinker-rl/)                                   | RL training for computer use agents, using Tinker                                                |
+
+## Useful resources
+
+- [Documentation](https://kernel.sh/docs)
+- [API reference](https://www.kernel.sh/docs/api-reference/browsers/create-a-browser-session)
+- [Agent-readable docs index](https://kernel.sh/docs/llms.txt) for giving your coding agent Kernel context
+- [Hosted MCP server](https://www.kernel.sh/docs/reference/mcp-server) for tool-calling agents
+- [CLI](https://www.kernel.sh/docs/reference/cli)
+- [Discord](https://discord.gg/FBrveQRcud)

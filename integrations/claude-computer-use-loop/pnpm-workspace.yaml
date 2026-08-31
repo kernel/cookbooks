@@ -1,0 +1,4 @@
+allowBuilds:
+  esbuild: set this to true or false
+minimumReleaseAgeExclude:
+  - '@anthropic-ai/sdk@0.122.0'

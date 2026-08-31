@@ -1,0 +1,37 @@
+{
+  "name": "kernel-ai-sdk-agent",
+  "version": "1.0.0",
+  "description": "AI agent powered by Kernel and Vercel AI SDK for browser automation",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js"
+  },
+  "keywords": [
+    "kernel",
+    "ai-sdk",
+    "agent",
+    "browser-automation",
+    "playwright"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@ai-sdk/openai": "^4.0.50",
+    "@onkernel/sdk": "^0.96.0",
+    "ai": "^7.0.83",
+    "boxen": "^8.0.1",
+    "chalk": "^5.6.2",
+    "cli-table3": "^0.6.5",
+    "dotenv": "^16.4.5",
+    "inquirer": "^12.10.0",
+    "ora": "^9.0.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}
