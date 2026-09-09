@@ -42,6 +42,7 @@ Kernel paired with the rest of your stack.
 | [mastra-web-task-assistant](integrations/mastra-web-task-assistant/)   | Human-in-the-loop web task assistant with memory, built on Mastra                                |
 | [vibium](integrations/vibium/)                                         | Vibium browser automation over WebDriver BiDi                                                    |
 | [tinker-rl](integrations/tinker-rl/)                                   | RL training for computer use agents, using Tinker                                                |
+| [fx-colocated-agent](integrations/fx-colocated-agent/)                 | Running Vercel's fx agent inside a Kernel browser VM, co-located with the browser it drives      |
 
 ## Useful resources
 
