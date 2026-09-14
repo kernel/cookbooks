@@ -1,3 +1,9 @@
+```
++-+-+ +-+-+ +-+-+-+-+-+-+
+|f|x| |<|>| |K|E|R|N|E|L|
++-+-+ +-+-+ +-+-+-+-+-+-+
+```
+
 # fx, co-located with its browser
 
 [fx](https://fx.sh) is Vercel Labs' terminal-first coding agent.
