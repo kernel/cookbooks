@@ -11,7 +11,7 @@ const app = kernel.app("profile-auth-and-task-execution");
  * Invoke this action to test Kernel browsers manually with our browser live view
  * Use the Profile browser to log into your account on a website
  * Use the Profile to create a task that can be executed in a new browser with the same Profile pre-loaded
- * https://www.kernel.sh/docs/auth/profiles
+ * https://www.kernel.sh/docs/browsers/profiles
  * Args:
  *     ctx: Kernel context containing invocation information
  * Returns:
