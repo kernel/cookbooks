@@ -250,7 +250,7 @@ kernel invoke profile-auth-and-task-execution get-payload-schemas
 
 ## Documentation
 
-- [Kernel Browsers Documentation](https://www.kernel.sh/docs/auth/profiles)
+- [Kernel Browsers Documentation](https://www.kernel.sh/docs/browsers/profiles)
 - [Kernel SDK Reference](https://www.kernel.sh/docs)
 - [Magnitude Framework](https://docs.magnitude.run/getting-started/introduction)
 
