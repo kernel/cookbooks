@@ -1,0 +1,41 @@
+integrations/mastra/.env.example
+  s_22b507704d841b::t_8cc38b59c1f8fb 1-10
+integrations/mastra/.gitignore
+  s_22b507704d841b::t_044b561169ff15 1-8
+integrations/mastra/README.md
+  s_22b507704d841b::t_89b2dcde159937 1-79
+integrations/mastra/package-lock.json
+  s_22b507704d841b::t_7b519deddb8989 1-3620
+integrations/mastra/package.json
+  s_22b507704d841b::t_1b6eccc3da7ac3 1-27
+integrations/mastra/skills-lock.json
+  s_22b507704d841b::t_c759c56e39c98a 1-40
+integrations/mastra/src/config.ts
+  s_22b507704d841b::t_ad683d8de077be 1-34
+integrations/mastra/src/demo/run-form-assistant.ts
+  s_22b507704d841b::t_55596f1e5593d0 1-694
+integrations/mastra/src/mastra/memory/profile-memory.ts
+  s_22b507704d841b::t_bca0422e641ec6 1-112
+integrations/mastra/src/mastra/tools/kernel-tools.ts
+  s_22b507704d841b::t_cc9f7bc176524c 1-287
+integrations/mastra/src/types.ts
+  s_22b507704d841b::t_839bb35fe84488 1-11
+integrations/mastra/tsconfig.json
+  s_22b507704d841b::t_fd4cbe8bad8a19 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "fe27e0dd0b03fc7be4284ac19bce9ef2d017c934",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}

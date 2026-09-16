@@ -1,0 +1,60 @@
+integrations/mastra-web-task-assistant/src/config.ts
+  s_22b507704d841b::t_7bcea0c9eca48b 18
+  s_22b507704d841b::t_cd05a6e53a8883 15-17
+  s_22b507704d841b::t_e474f373a2c0d6 19-21
+  s_182c5fe6e2f156::t_e4a538ff040391 1-14,22-34
+integrations/mastra-web-task-assistant/src/mastra/tools/kernel-tools.ts
+  s_22b507704d841b::t_b45b7bd7f391d4 20-104
+  s_22b507704d841b::t_9c0fba8126ef02 5-16,113,116,125,130,254,266,318
+  s_22b507704d841b::t_3205c2d16bd0b5 1-4,17-19,105-112,114-115,117-124,126-129,131-253,255-265,267-317
+integrations/mastra-web-task-assistant/README.md
+  s_22b507704d841b::t_8ca9ae096a0f10 5-7
+  s_22b507704d841b::t_e4e0d9aee832c7 2-4
+  s_22b507704d841b::t_d6a4935cb25377 8-10
+  s_182c5fe6e2f156::t_9c185879fe3a31 1,11-80
+integrations/mastra-web-task-assistant/.env.example
+  s_22b507704d841b::t_6fd361c3064825 9-10
+  s_22b507704d841b::t_b3fa03beecb12e 4-8
+  s_22b507704d841b::t_671c8f21bed278 1-3
+  s_22b507704d841b::t_ced5e3194044d6 11
+integrations/mastra-web-task-assistant/package.json
+  s_22b507704d841b::t_3279c5c3ab666f 1-27
+integrations/mastra-web-task-assistant/.gitignore
+  s_22b507704d841b::t_d74b00f51e1393 1-8
+integrations/mastra-web-task-assistant/package-lock.json
+  s_22b507704d841b::t_fe0f22bbe10771 1-3212
+integrations/mastra-web-task-assistant/skills-lock.json
+  s_22b507704d841b::t_73a8049c2700a5 1-40
+integrations/mastra-web-task-assistant/src/demo/run-form-assistant.ts
+  s_22b507704d841b::t_21e7866c675f73 1-776
+integrations/mastra-web-task-assistant/src/mastra/memory/profile-memory.ts
+  s_22b507704d841b::t_0c83b3bcbeb5dd 1-121
+integrations/mastra-web-task-assistant/src/types.ts
+  s_22b507704d841b::t_0dab8873fc3594 1-11
+integrations/mastra-web-task-assistant/tsconfig.json
+  s_22b507704d841b::t_4a6f5088b4c5f4 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "03b4151c3c0f91e5fe41dbba50be9c05fbedf0fa",
+  "prompts": {},
+  "sessions": {
+    "s_182c5fe6e2f156": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "agent-af6cd99d08dd4f088",
+        "model": "unknown"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    },
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}

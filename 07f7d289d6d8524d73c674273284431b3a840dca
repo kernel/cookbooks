@@ -1,0 +1,141 @@
+integrations/tinker-rl/scripts/merge_lora.py
+  s_22b507704d841b::t_b756941b588d3d 32,94,96,102,184,187-190,225
+  s_22b507704d841b::t_0c36c5336af72d 1-31,33-93,95,97-101,103-183,185-186,191-224
+integrations/tinker-rl/examples/osworld/config.py
+  s_22b507704d841b::t_5e55cc447f8400 1-24
+integrations/tinker-rl/core/reward_models/webjudge.py
+  s_22b507704d841b::t_d4e8277dfe2302 1-97,99-106,109-400
+  s_22b507704d841b::t_9572b2d1a89073 107-108
+  s_22b507704d841b::t_9a97dcdcc778fc 98
+integrations/tinker-rl/examples/agent_auth/dataset.py
+  s_22b507704d841b::t_05356202a93f5e 1-75
+integrations/tinker-rl/core/actions.py
+  s_22b507704d841b::t_c08f940c1ce3e9 1-687
+integrations/tinker-rl/examples/agent_auth/evaluator.py
+  s_22b507704d841b::t_b756941b588d3d 215,296,352,356
+  s_22b507704d841b::t_5ee53ea8462402 1-214,216-295,297-351,353-355,357-431
+integrations/tinker-rl/core/utils.py
+  s_22b507704d841b::t_ada841cc3b4439 1-344
+integrations/tinker-rl/scripts/modal_sglang_serve.py
+  s_22b507704d841b::t_b756941b588d3d 67-72,88-93,123,216,288,306,349-351,360-368,371-372,374-375
+  s_22b507704d841b::t_876eb71554d5ff 1-66,73-87,94-122,124-215,217-287,289-305,307-348,352-359,369-370,373,376-379
+integrations/tinker-rl/examples/agent_auth/config.py
+  s_22b507704d841b::t_6fa5f7519567e0 1-51
+integrations/tinker-rl/docs/custom-environments.md
+  s_22b507704d841b::t_b756941b588d3d 42,55-62,162-169,300-305,328,364,369,412,414
+  s_22b507704d841b::t_3796dc82411418 1-41,43-54,63-161,170-299,306-327,329-363,365-368,370-411,413,415-429
+integrations/tinker-rl/scripts/run_agent.py
+  s_22b507704d841b::t_2087e444254573 568
+  s_22b507704d841b::t_3a9dd289b0426e 1-53,55-143,150-151,155-209,211-218,220-258,260-325,329-356,360-518,522-567,569-697
+  s_22b507704d841b::t_b756941b588d3d 54,144-149,152-154,210,219,259,326-328,357-359,519-521
+integrations/tinker-rl/scripts/tinker_evaluate.py
+  s_22b507704d841b::t_2efbd1589e4a96 1-221,224-232,235-309,311-320,323-473
+  s_22b507704d841b::t_b756941b588d3d 222-223,233-234,310,321-322
+integrations/tinker-rl/docs/architecture.md
+  s_22b507704d841b::t_98877e151d9cc6 1-230
+integrations/tinker-rl/examples/osworld/dataset.py
+  s_22b507704d841b::t_56fe4f0c076474 1-73
+integrations/tinker-rl/.python-version
+  s_22b507704d841b::t_ae452d21b9e754 1
+integrations/tinker-rl/README.md
+  s_22b507704d841b::t_b756941b588d3d 322
+  s_22b507704d841b::t_1ebb0646a3d262 1-321,323-386
+integrations/tinker-rl/scripts/split_dataset.py
+  s_22b507704d841b::t_1ef9f1a532fbcd 1-137
+integrations/tinker-rl/docs/getting-started.md
+  s_22b507704d841b::t_87c1981d8b8ef4 98-116
+  s_22b507704d841b::t_5d5ddabf803b55 309
+  s_22b507704d841b::t_32d7990fec2a09 1-8,10-51,53-97,117-158,169-170,172-214,223-275,278-308
+  s_22b507704d841b::t_a611e244eef750 9
+  s_22b507704d841b::t_53231f6d0c369b 276-277
+  s_22b507704d841b::t_857eaac45dde26 159-168,171,215-222
+  s_22b507704d841b::t_fb28150ba2c14e 52
+integrations/tinker-rl/.gitignore
+  s_22b507704d841b::t_f3f66f9e26fa8e 1-78
+integrations/tinker-rl/examples/agent_auth/actions.py
+  s_22b507704d841b::t_dd013b7a17525d 1-116
+integrations/tinker-rl/scripts/plot_metrics.py
+  s_22b507704d841b::t_c0b4a8b3ae85fd 1-45,49-50,54-97,108-132
+  s_22b507704d841b::t_b756941b588d3d 46-48,51-53,98-107
+integrations/tinker-rl/pyrightconfig.json
+  s_22b507704d841b::t_9ffb5d1be4fe41 1-6
+integrations/tinker-rl/core/reward_models/__init__.py
+  s_22b507704d841b::t_26cf49f12f2cc0 1-14
+integrations/tinker-rl/examples/agent_auth/environment.py
+  s_22b507704d841b::t_e93b1f4878ebcb 1-16,18,20-33,36-193,198-245,249-261,265-283,287-301,305-312,316-332,336-582,586-762
+  s_22b507704d841b::t_b756941b588d3d 17,19,34-35,194-197,246-248,262-264,284-286,302-304,313-315,333-335,583-585
+integrations/tinker-rl/core/reward_models/base.py
+  s_22b507704d841b::t_9edd1b9cfd11cf 1-116
+integrations/tinker-rl/examples/osworld/README.md
+  s_22b507704d841b::t_857eaac45dde26 37-41,47
+  s_22b507704d841b::t_a99451c8d991b7 1-36,42-46,48-53
+integrations/tinker-rl/scripts/train.py
+  s_22b507704d841b::t_53de7310e7ab8f 1-257,259-417
+  s_22b507704d841b::t_b756941b588d3d 258
+integrations/tinker-rl/core/browser.py
+  s_22b507704d841b::t_81a5f178a0c514 1-10,12-440,442-464,466-490,492-496,498-518,520-529,531-533,535-539,541-550,552-557,559-562,564-565,567,569-570,572-577,579,581-590,592-613,615-647,649-747
+  s_22b507704d841b::t_b756941b588d3d 441,465,491,497,519,530,534,540,551,558,563,566,568,571,578,580,591,614
+  s_22b507704d841b::t_84196fc5c29a57 11,648
+integrations/tinker-rl/scripts/download_checkpoint.py
+  s_22b507704d841b::t_791ff065a43b68 1-204
+integrations/tinker-rl/core/prompts.py
+  s_22b507704d841b::t_b3f8860f3550e7 1-165
+integrations/tinker-rl/pyproject.toml
+  s_22b507704d841b::t_b027895c675187 25
+  s_22b507704d841b::t_69878e1bb55591 1-24,26-40
+integrations/tinker-rl/scripts/list_openrouter_models.py
+  s_22b507704d841b::t_ffd2b810ea62ab 1-97,100-108,111-120,123-126,129-190,192-240
+  s_22b507704d841b::t_b756941b588d3d 98-99,109-110,121-122,127-128,191
+integrations/tinker-rl/core/agent_loop.py
+  s_22b507704d841b::t_68b65e2a2e9938 1-45,49-282
+  s_22b507704d841b::t_b756941b588d3d 46-48
+integrations/tinker-rl/core/__init__.py
+  s_22b507704d841b::t_ae407e4fe34d9d 1-113
+integrations/tinker-rl/scripts/modal_vllm_serve.py
+  s_22b507704d841b::t_b756941b588d3d 59-65,82-87,116,209,313,356-357,359-360,363-377
+  s_22b507704d841b::t_92e52ef35a9162 1-58,66-81,88-115,117-208,210-312,314-355,358,361-362,378-383
+integrations/tinker-rl/uv.lock
+  s_22b507704d841b::t_7474d004428691 1-4917
+  s_22b507704d841b::t_d365b5b72c10f8 4918-5344
+integrations/tinker-rl/scripts/evaluate.py
+  s_22b507704d841b::t_a37b9701d8a515 1-74,76-78,80-327,331-349,356-370,372-377,381-382,386-501,505-512,516-727,729-758,760-770,772-814
+  s_22b507704d841b::t_b756941b588d3d 75,79,328-330,350-355,371,378-380,383-385,502-504,513-515,728,759,771
+integrations/tinker-rl/scripts/test_tinker_api.py
+  s_22b507704d841b::t_b756941b588d3d 52,68
+  s_22b507704d841b::t_51186401aaf3d8 1-51,53-67,69-146
+integrations/tinker-rl/examples/osworld/__init__.py
+  s_22b507704d841b::t_13014e2ec18e94 1-14
+integrations/tinker-rl/examples/osworld/tasks.jsonl
+  s_22b507704d841b::t_e8732874aad5c9 1-10
+integrations/tinker-rl/examples/agent_auth/__init__.py
+  s_22b507704d841b::t_71d4c9b4e83753 1-20
+integrations/tinker-rl/examples/agent_auth/README.md
+  s_22b507704d841b::t_43216cd973b0a6 1-44
+integrations/tinker-rl/examples/agent_auth/tasks.jsonl
+  s_22b507704d841b::t_4ba402df540448 1-470
+integrations/tinker-rl/examples/osworld/actions.py
+  s_22b507704d841b::t_6fa849c89c60a9 1-13
+integrations/tinker-rl/core/tracking.py
+  s_22b507704d841b::t_b756941b588d3d 36
+  s_22b507704d841b::t_d61c4b290d5518 1-35,37-337
+integrations/tinker-rl/core/agent.py
+  s_22b507704d841b::t_aafaeeea88511f 1-37,39-213,217-256,258-277
+  s_22b507704d841b::t_6fdead33d488b7 38
+  s_22b507704d841b::t_b756941b588d3d 214-216,257
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "07f7d289d6d8524d73c674273284431b3a840dca",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}

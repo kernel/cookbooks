@@ -1,0 +1,49 @@
+integrations/stagehand-google-cua-agent/README.md
+  s_22b507704d841b::t_857eaac45dde26 16,40
+  s_22b507704d841b::t_bd331045004a63 11-12
+  s_22b507704d841b::t_3a17df1cc5a544 56
+  s_22b507704d841b::t_81b2205a6cc702 1-10,13-15,17-27,29-30,33-34,36-39,41-55
+  s_22b507704d841b::t_175dca525420e3 28,31-32,35
+integrations/stagehand-google-cua-agent/.env-example
+  s_22b507704d841b::t_05bb88cadf38e2 1-3
+integrations/stagehand-google-cua-agent/tsconfig.json
+  s_22b507704d841b::t_509b8540f7b028 1-30
+integrations/stagehand-google-cua-agent/package.json
+  s_22b507704d841b::t_06bd90476d6178 13
+  s_22b507704d841b::t_bf8f5b88b26021 14
+  s_22b507704d841b::t_43ce0c51770838 6-8,15,17-19
+  s_22b507704d841b::t_3fc35220365a6a 1-5,9-12,16,20-21
+integrations/stagehand-google-cua-agent/index.ts
+  s_22b507704d841b::t_91e4d7cba5f04c 111-123
+  s_22b507704d841b::t_57928ca60a0b77 50-52,54-55
+  s_22b507704d841b::t_9140bc17960ca1 4
+  s_22b507704d841b::t_b756941b588d3d 3,7,10,26,30,33-35,59-62,70,73-74,90,100-101,140,149-158
+  s_22b507704d841b::t_ae05e06210fc9c 69
+  s_22b507704d841b::t_bcd45c465be5bf 88
+  s_22b507704d841b::t_91c5964081fbb8 2,5-6,8-9,11-17,20,22-25,27-29,31-32,36-49,53,56-58,63-66,71-72,75-81,84-85,89,94-99,102-110,124-139,141-148
+  s_22b507704d841b::t_e398a063d96d32 67-68,82-83,86-87,91-93
+  s_22b507704d841b::t_6396c22cf97254 1
+  s_22b507704d841b::t_e79fe0414379e8 18-19,21
+integrations/stagehand-google-cua-agent/CLAUDE.md
+  s_22b507704d841b::t_857eaac45dde26 14,20,26,33,42,52,58,64,72,79,85,91
+  s_22b507704d841b::t_fdcf34cd781495 1-13,15-19,21-25,27-32,34-41,43-51,53-57,59-63,65-71,73-78,80-84,86-90,92-98,100
+  s_22b507704d841b::t_2286ec9ac4c1f3 99
+integrations/stagehand-google-cua-agent/.gitignore
+  s_22b507704d841b::t_a13396cf04fe30 1-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "00f63566fd9b0d17a88a6bb238c727cc0ddec29c",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}

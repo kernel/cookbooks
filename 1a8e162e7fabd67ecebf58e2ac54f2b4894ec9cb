@@ -1,0 +1,31 @@
+features/proxies/.gitignore
+  s_22b507704d841b::t_0ccf50bee8dafa 1-74
+features/proxies/CLAUDE.md
+  s_22b507704d841b::t_83f4ef147580be 1-105
+features/proxies/README.md
+  s_22b507704d841b::t_b3252213367284 1-119
+features/proxies/check_region.py
+  s_22b507704d841b::t_ca9f09224dac3b 1-101
+features/proxies/main.py
+  s_22b507704d841b::t_30679c27b3810b 1-30
+features/proxies/pyproject.toml
+  s_22b507704d841b::t_595c891dc2f39e 1-11
+features/proxies/uv.lock
+  s_22b507704d841b::t_69fb887dd1aede 1-4733
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "1a8e162e7fabd67ecebf58e2ac54f2b4894ec9cb",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+modal-web-scraper/kernel_webscraper.py
+  s_22b507704d841b::t_5b618aec0146bc 1-536
+modal-web-scraper/README.md
+  s_22b507704d841b::t_815a68f2cd6532 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "07c99a8a158543064eae207ebf58bfa3c7c0f3e2",
+  "prompts": {},
+  "humans": {
+    "h_a435c0ae627c8b": {
+      "author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  },
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}

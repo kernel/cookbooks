@@ -1,0 +1,58 @@
+integrations/tinker-rl/core/prompts.py
+  s_22b507704d841b::t_1633f7319d2311 5,25-27,29-30
+  s_22b507704d841b::t_32a34b0373a429 28
+integrations/tinker-rl/examples/agent_auth/environment.py
+  s_22b507704d841b::t_c5e6b454f0e2a4 56,86-88,241-243
+  s_22b507704d841b::t_52f61edc278a95 43,220,226
+  s_22b507704d841b::t_72c0f38e63c33b 58-59
+integrations/tinker-rl/scripts/modal_vllm_serve.py
+  s_22b507704d841b::t_68b907a05da656 35-36
+integrations/tinker-rl/scripts/train.py
+  s_22b507704d841b::t_66078c9139d05a 62,378-380
+  s_22b507704d841b::t_68b907a05da656 61
+integrations/tinker-rl/scripts/merge_lora.py
+  s_22b507704d841b::t_68b907a05da656 13,37
+  s_22b507704d841b::t_7abedf7391d917 30-31
+integrations/tinker-rl/scripts/modal_sglang_serve.py
+  s_22b507704d841b::t_68b907a05da656 41-42
+integrations/tinker-rl/core/__init__.py
+  s_22b507704d841b::t_c5e6b454f0e2a4 28,81
+integrations/tinker-rl/scripts/tinker_evaluate.py
+  s_22b507704d841b::t_68b907a05da656 15,21,28,66,80,130-131
+  s_22b507704d841b::t_7abedf7391d917 57-58
+integrations/tinker-rl/docs/custom-environments.md
+  s_22b507704d841b::t_1012fc4cc21570 174-178,261,265-267,269,424
+  s_22b507704d841b::t_cfe0826106316d 162
+integrations/tinker-rl/README.md
+  s_22b507704d841b::t_f0549520e2e872 76,118-135,147-149,151-153,181
+  s_22b507704d841b::t_32a34b0373a429 150
+integrations/tinker-rl/examples/agent_auth/evaluator.py
+  s_22b507704d841b::t_72c0f38e63c33b 17,24,54,116,122
+  s_22b507704d841b::t_c5e6b454f0e2a4 52,294
+integrations/tinker-rl/core/actions.py
+  s_22b507704d841b::t_5493ca78ec8951 674
+  s_22b507704d841b::t_a339c729c5ff45 629-673,675-698
+integrations/tinker-rl/docs/getting-started.md
+  s_22b507704d841b::t_6e3c5d69a170ac 121-123,133-134,136-138,140-148,153,156,160,164,166-193,196-197
+  s_22b507704d841b::t_696d19b267ff7a 119-120,124-132,139,151-152,154-155,157-159,161-163,165,194-195
+  s_22b507704d841b::t_32a34b0373a429 135
+  s_22b507704d841b::t_2778c7249c1e56 198
+integrations/tinker-rl/uv.lock
+  s_22b507704d841b::t_cdb065b8f6e925 139-147,357,359,361,464-540,930-949,996,999,1002-1003,1009,1011,1838-1839,1841-1843,1845-1846,1850-1851,1854-1855,1859-1860,1863-1864,1868-1869,1872-1873,1877-1878,1881,1884-1885,1889-1890,1893,1896-1897,1901-1902,1905-1906,1910-1911,1914-1915,1919-1920,1923-1925,1928-1929,1933-1934,1937,1940-1941,1945-1946,1949-1950,1954-1955,1958-1959,1963-1964,1967-1968,1972-1973,1976-1977,1981-1982,1985-1986,3610-3611,3613,3615,3688-3689,3692,3695-3745,3775-3776,3778,3784,3787,3789,3791,3793,3795,3799-3808,3845,3848-3849,3854-3858,3860,3864-3883,3959,3970,3972,3974,3979-3996,3998-4004,4006
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "384a893a2a487fbef916e3385af3c6d2475cb6a8",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}

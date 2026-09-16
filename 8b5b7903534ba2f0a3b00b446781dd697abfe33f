@@ -1,0 +1,14 @@
+README.md
+  h_a435c0ae627c8b 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "8b5b7903534ba2f0a3b00b446781dd697abfe33f",
+  "prompts": {},
+  "humans": {
+    "h_a435c0ae627c8b": {
+      "author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}

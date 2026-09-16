@@ -1,0 +1,35 @@
+integrations/vibium/.gitignore
+  s_22b507704d841b::t_79e9f5e3be31d6 1-6
+integrations/vibium/README.md
+  s_22b507704d841b::t_40b44a6b1ede58 1-105
+integrations/vibium/cli/kernel-vibium-cli-example.sh
+  s_22b507704d841b::t_991f6d0bc00f1f 1-87
+integrations/vibium/python/kernel-vibium-python-example.py
+  s_22b507704d841b::t_67d226585369a7 1-71
+integrations/vibium/python/requirements.txt
+  s_22b507704d841b::t_100aae1eec2576 1-2
+integrations/vibium/ts/kernel-vibium-node-example.ts
+  s_22b507704d841b::t_6ba22a1ea50a17 1-65
+integrations/vibium/ts/package-lock.json
+  s_22b507704d841b::t_e25a79efc63744 1-179
+integrations/vibium/ts/package.json
+  s_22b507704d841b::t_9cad818457580d 1-18
+integrations/vibium/ts/tsconfig.json
+  s_22b507704d841b::t_fc5a2bbc49713b 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "166da2288586530d082967f6598e36d0359a6a0e",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}

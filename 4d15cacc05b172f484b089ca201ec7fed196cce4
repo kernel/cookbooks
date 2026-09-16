@@ -1,0 +1,24 @@
+features/proxies/check_region.py
+  s_22b507704d841b::t_e2b9f8ff6a59f1 38-39,41-44,113-115,117-120,122-128
+features/proxies/README.md
+  s_22b507704d841b::t_e3c6d1323a6c6c 102,119
+  s_22b507704d841b::t_02ed415037c6b3 120
+features/proxies/main.py
+  s_22b507704d841b::t_ee09d6bab6712f 31-32,34-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "4d15cacc05b172f484b089ca201ec7fed196cce4",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}

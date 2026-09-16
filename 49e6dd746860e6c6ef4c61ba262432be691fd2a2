@@ -1,0 +1,43 @@
+integrations/claude-managed-agents/.env.example
+  s_22b507704d841b::t_80b56d908cf607 1-5
+integrations/claude-managed-agents/.gitignore
+  s_22b507704d841b::t_a19141c912522a 1-18
+integrations/claude-managed-agents/README.md
+  s_22b507704d841b::t_43d13594f01663 1-102
+integrations/claude-managed-agents/examples/lead-intel-modal.md
+  s_22b507704d841b::t_fff9d178890014 1-56
+integrations/claude-managed-agents/examples/ux-swarm-kernel-sh.md
+  s_22b507704d841b::t_4da4e7c0415eea 1-55
+integrations/claude-managed-agents/package-lock.json
+  s_22b507704d841b::t_5d1f514f01907e 1-640
+integrations/claude-managed-agents/package.json
+  s_22b507704d841b::t_9662152adac6d6 1-21
+integrations/claude-managed-agents/src/config.ts
+  s_22b507704d841b::t_edfad29eea4c13 1-390
+integrations/claude-managed-agents/src/lead-intel.ts
+  s_22b507704d841b::t_3882fecc8a549f 1-73
+integrations/claude-managed-agents/src/setup.ts
+  s_22b507704d841b::t_8ad619b2b99791 1-113
+integrations/claude-managed-agents/src/teardown.ts
+  s_22b507704d841b::t_8bbb675210f23d 1-83
+integrations/claude-managed-agents/src/ux-swarm.ts
+  s_22b507704d841b::t_eac1138133b2a5 1-70
+integrations/claude-managed-agents/tsconfig.json
+  s_22b507704d841b::t_12a1a784bf581f 1-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "49e6dd746860e6c6ef4c61ba262432be691fd2a2",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}

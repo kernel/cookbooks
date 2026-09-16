@@ -1,0 +1,21 @@
+integrations/modal-web-scraper/kernel_webscraper.py
+  s_22b507704d841b::t_1c1a3ca1653e8f 261-262
+  s_22b507704d841b::t_46a90a6159acfe 56
+  s_22b507704d841b::t_e1d5017123f3f7 48-51,80-82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "fc1f9b967581335949f8168b95e7a0518064b3b5",
+  "prompts": {},
+  "sessions": {
+    "s_22b507704d841b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f23d4d51-9602-401e-ad46-7dc124fd6849",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dan Goosewin <dan@goosewin.com>"
+    }
+  }
+}
