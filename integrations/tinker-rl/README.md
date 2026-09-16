@@ -1,5 +1,7 @@
 # Computer Use RL with Kernel + Tinker
 
+**Skills used:** [kernel-python-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-python-sdk). Install with `npx skills add kernel/skills`.
+
 Train vision-language model (VLM) agents to perform computer use tasks using reinforcement learning.
 
 This repository provides the infrastructure to train agents that can navigate websites, fill forms, click buttons, and complete complex web tasks—all learned from experience with real browsers.

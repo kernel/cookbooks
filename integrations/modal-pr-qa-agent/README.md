@@ -1,5 +1,7 @@
 # PR QA with Claude computer use + a Kernel browser
 
+**Skills used:** [kernel-python-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-python-sdk), [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli) (replays reference). Install with `npx skills add kernel/skills`.
+
 Does the feature still work in a real browser? This agent points Claude computer use at a PR preview through a Kernel headful browser, records the session with Replays, and returns pass/fail. [kernel_pr_qa_agent.py](kernel_pr_qa_agent.py) is a literate example; the full walkthrough, including the deploy path that comments verdicts back on PRs, is in the file.
 
 ## Prerequisites

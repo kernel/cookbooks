@@ -1,5 +1,7 @@
 # BU-1.0-model-python
 
+**Skills used:** [kernel-python-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-python-sdk). Install with `npx skills add kernel/skills`.
+
 A Kernel application that implements the Browser Use SDK with the `BU 1.0` model for autonomous browser automation tasks.
 
 ## Description

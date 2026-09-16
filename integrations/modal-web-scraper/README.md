@@ -1,5 +1,7 @@
 # Web scraping with a Kernel headful browser
 
+**Skills used:** [kernel-python-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-python-sdk), [kernel-auth](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-auth). Install with `npx skills add kernel/skills`.
+
 Scrapes JS-rendered pages behind a login. The browser runs on Kernel (no browser binary in the Modal image), with login via Managed Auth and extraction on a self-hosted Modal Endpoint. [kernel_webscraper.py](kernel_webscraper.py) is a literate example; the full walkthrough is in the file.
 
 ## Prerequisites

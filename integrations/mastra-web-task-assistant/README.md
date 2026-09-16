@@ -1,5 +1,7 @@
 # Mastra + Kernel Demo: HITL Web Task Assistant with Memory
 
+**Skills used:** [kernel-typescript-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-typescript-sdk), [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli) (profiles and replays reference). Install with `npx skills add kernel/skills`.
+
 This repository is an end-to-end demo of building with [Mastra](https://mastra.ai/) and [Kernel](https://www.kernel.sh): a Human-in-the-Loop web task assistant that runs in cloud browsers, asks for human input only when needed, and remembers non-sensitive profile details across runs.
 
 ## GPT-5.6 Terra computer-use focus

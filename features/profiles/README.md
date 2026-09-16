@@ -1,5 +1,7 @@
 # Kernel Profile-Based Browser Automation Demo
 
+**Skills used:** [kernel-typescript-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-typescript-sdk), [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli) (profiles reference). Install with `npx skills add kernel/skills`.
+
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Node Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)
 

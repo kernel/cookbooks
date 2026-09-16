@@ -1,5 +1,7 @@
 # Computer Controls - Anthropic Computer Use with Kernel
 
+**Skills used:** [kernel-typescript-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-typescript-sdk), [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli) (computer controls reference). Install with `npx skills add kernel/skills`.
+
 A minimal SDK implementation of Anthropic's Computer Use loop that drives Kernel browsers using screenshots from Kernel's Computer Controls API.
 
 ## Setup
