@@ -1,5 +1,7 @@
 # Kernel + Vibium Examples
 
+**Skills used:** [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli), [kernel-typescript-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-typescript-sdk), [kernel-python-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-python-sdk). Install with `npx skills add kernel/skills`.
+
 This directory is a small starter set of examples for using Vibium with Kernel over WebDriver BiDi.
 
 Each example follows the same shape:

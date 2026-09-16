@@ -1,5 +1,7 @@
 # Using Ad Blocker Extensions with Kernel Browsers
 
+**Skills used:** [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli) (extensions reference), [kernel-typescript-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-typescript-sdk). Install with `npx skills add kernel/skills`.
+
 This guide documents how to use popular ad blocker extensions with [Kernel](https://www.kernel.sh) cloud browsers for automation workflows.
 
 ## Quick Start (Recommended: AdGuard)

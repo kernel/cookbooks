@@ -1,0 +1,34 @@
+{
+  "name": "kernel-global-checkout-agent",
+  "version": "0.1.0",
+  "description": "Price-check one checkout from browsers in us-east, eu-west and ap-southeast, then pay the cheapest with a Kernel Vault card, with replays",
+  "type": "module",
+  "private": true,
+  "author": "Kernel",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsx --env-file=.env index.ts",
+    "dry-run": "DRY_RUN=true tsx --env-file=.env index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "kernel",
+    "browser-automation",
+    "regional-browsers",
+    "vault",
+    "payments",
+    "replays",
+    "checkout"
+  ],
+  "dependencies": {
+    "@onkernel/sdk": "^0.104.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4.20.0",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=20.6"
+  }
+}

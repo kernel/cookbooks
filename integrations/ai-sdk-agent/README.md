@@ -1,5 +1,7 @@
 # Kernel AI SDK Agent
 
+**Skills used:** [kernel-typescript-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-typescript-sdk). Install with `npx skills add kernel/skills`.
+
 An AI-powered browser automation agent that combines [Kernel](https://onkernel.com) and the [Vercel AI SDK](https://ai-sdk.dev) to execute natural language tasks using Playwright. This demo project was built to showcase the flexibility and power of the new [Playwright Execution API](https://www.onkernel.com/docs/browsers/playwright-execution) from Kernel.
 
 https://github.com/user-attachments/assets/7e8db9bc-2f01-4547-896b-0f7b82ab486e

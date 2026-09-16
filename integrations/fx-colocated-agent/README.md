@@ -13,6 +13,8 @@
 
 # fx, co-located with its browser
 
+**Skills used:** [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli). Install with `npx skills add kernel/skills`.
+
 [fx](https://fx.sh) is Vercel Labs' terminal-first coding agent.
 
 this cookbook runs fx alongside chromium in the same linux environment. fx sends browser-control calls to the local playwright endpoint instead of routing each one through KERNEL's public api.

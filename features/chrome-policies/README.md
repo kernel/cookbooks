@@ -1,5 +1,7 @@
 # Chrome Enterprise Policies on Kernel Browsers
 
+**Skills used:** [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli) (browser management reference). Install with `npx skills add kernel/skills`.
+
 This guide demonstrates how to apply Chromium Enterprise Policies to a Kernel browser session using the Kernel CLI's native `--chrome-policy` / `--chrome-policy-file` flags, and how to verify they took effect via `chrome://policy`.
 
 ## Overview

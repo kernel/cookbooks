@@ -1,5 +1,7 @@
 # Kernel Proxies Demo
 
+**Skills used:** [kernel-python-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-python-sdk), [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli) (proxies reference). Install with `npx skills add kernel/skills`.
+
 This demo showcases **Kernel's new proxies feature** by verifying regional website availability across multiple geographic locations using residential proxies and the Browser Use SDK.
 
 ## What This Demonstrates

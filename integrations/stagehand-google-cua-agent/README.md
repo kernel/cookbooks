@@ -1,5 +1,7 @@
 # Kernel TypeScript SDK + Stagehand + Gemini Computer Use Agent
 
+**Skills used:** [kernel-typescript-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-typescript-sdk). Install with `npx skills add kernel/skills`.
+
 A Kernel application that demonstrates Computer Use Agent (CUA) capabilities using Google's Gemini 2.5 model with Stagehand for browser automation.
 
 https://github.com/user-attachments/assets/d683f527-be61-4551-9745-1144db088127

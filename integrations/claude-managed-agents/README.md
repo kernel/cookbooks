@@ -1,5 +1,7 @@
 # Claude Managed Agents + Kernel Browsers
 
+**Skills used:** [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli) (computer controls reference). Install with `npx skills add kernel/skills`.
+
 A cookbook showing how to use **Claude Managed Agents** alongside [Kernel](https://www.kernel.sh) browsers.
 
 ---

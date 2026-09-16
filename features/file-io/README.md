@@ -1,5 +1,7 @@
 # Kernel File I/O Demo
 
+**Skills used:** [kernel-python-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-python-sdk), [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli) (filesystem reference). Install with `npx skills add kernel/skills`.
+
 A demonstration of file download automation using [Kernel](https://www.kernel.sh) cloud browsers with Playwright and Chrome DevTools Protocol (CDP).
 
 This example shows how to automate downloading files from websites using Kernel's remote browser infrastructure, then retrieve those files from the cloud browser's filesystem to your local machine.

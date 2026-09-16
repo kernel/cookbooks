@@ -1,5 +1,7 @@
 # 🕵️ AI-Powered E-commerce QA Demo
 
+**Skills used:** [kernel-python-sdk](https://github.com/kernel/skills/tree/main/plugins/kernel-sdks/skills/kernel-python-sdk), [kernel-cli](https://github.com/kernel/skills/tree/main/plugins/kernel-cli/skills/kernel-cli) (replays reference). Install with `npx skills add kernel/skills`.
+
 > **Watch AI agents autonomously test your e-commerce site and generate reviewable browser replays**
 
 An intelligent quality assurance system that uses AI agents to automatically test e-commerce websites, powered by [Kernel](https://www.kernel.sh) and [Browser Use](https://github.com/browser-use/browser-use).

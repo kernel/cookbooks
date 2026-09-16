@@ -13,6 +13,25 @@
 
 End-to-end recipes for agents that use the internet, powered by [Kernel](https://www.kernel.sh). Each cookbook is self-contained: clone, set your secrets, run.
 
+## Get started
+
+**1. Give your coding agent the Kernel skills**
+
+```bash
+npx skills add kernel/skills
+```
+
+This installs the [Kernel skills](https://github.com/kernel/skills) (CLI, TypeScript and Python SDKs, managed auth, Vault, regions, replays, debugging) into Claude Code, Codex, Cursor, or any agent that reads [skills.sh](https://skills.sh). Your agent can then read, run, and extend any cookbook here without you pasting docs.
+
+**2. Pick a cookbook**
+
+Every cookbook README starts with a **Skills used** line so you know which skills it leans on. Clone this repo, `cd` into the cookbook, follow its README, and ask your agent to adapt it to your target site.
+
+```bash
+git clone https://github.com/kernel/cookbooks.git
+cd cookbooks/features/global-checkout-agent   # for example
+```
+
 ## Features
 
 Kernel product features, each shown in a small runnable example.
@@ -25,6 +44,7 @@ Kernel product features, each shown in a small runnable example.
 | [file-io](features/file-io/)                 | Downloads, uploads, and browser filesystem access      |
 | [ad-blocker](features/ad-blocker/)           | Ad blocker extensions in Kernel browsers               |
 | [chrome-policies](features/chrome-policies/) | Chromium Enterprise Policies in browser sessions       |
+| [global-checkout-agent](features/global-checkout-agent/) | Browsers in us-east, eu-west and ap-southeast price-check one product; the cheapest region checks out with a Vault card, replay attached |
 
 ## Integrations
 
@@ -46,6 +66,7 @@ Kernel paired with the rest of your stack.
 
 ## Useful resources
 
+- [Kernel skills](https://github.com/kernel/skills) for coding agents (`npx skills add kernel/skills`)
 - [Documentation](https://kernel.sh/docs)
 - [API reference](https://www.kernel.sh/docs/api-reference/browsers/create-a-browser-session)
 - [Agent-readable docs index](https://kernel.sh/docs/llms.txt) for giving your coding agent Kernel context
