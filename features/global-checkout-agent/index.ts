@@ -443,11 +443,20 @@ async function runCheckout(
       const shown = (await page.locator("[data-testid=checkout-container]").first().innerText()).replace(/,/g, "");
       if (!shown.includes(${JSON.stringify(expectedTotal)})) throw new Error("checkout no longer shows the confirmed total; not submitting");
 
+      await page.locator("#email").fill(${JSON.stringify(config.customer.email)});
+      await page.locator("#email").press("Tab");
+      // If the email belongs to a Link account, Stripe opens a Link sign-in code prompt.
+      // The agent must not sign in to the user's wallet; dismiss it and use the card form.
+      const linkPrompt = page.locator(".VerificationModal-modal");
+      if (await linkPrompt.waitFor({ timeout: 3000 }).then(() => true).catch(() => false)) {
+        await page.locator(".LinkVerificationHeader-cancelButton").click();
+        await linkPrompt.waitFor({ state: "hidden", timeout: 5000 });
+      }
+
       // Some markets show a payment-method accordion; open the card option if present.
       const cardTab = page.locator("[data-testid=card-accordion-item-button]");
       if (await cardTab.isVisible().catch(() => false)) await cardTab.click();
 
-      await page.locator("#email").fill(${JSON.stringify(config.customer.email)});
       await page.locator("#cardNumber").click();
       await page.locator("#cardNumber").pressSequentially(${JSON.stringify(aliases.number)}, { delay: 30 });
       await page.locator("#cardExpiry").pressSequentially(${JSON.stringify(expiry)}, { delay: 30 });
@@ -462,6 +471,13 @@ async function runCheckout(
       if (await save.isChecked().catch(() => false)) {
         await save.evaluate((el) => el.click());
         if (await save.isChecked()) throw new Error("could not untick save-my-info; not submitting");
+      }
+
+      // Agent disclosure: this checkout asks, and the truthful answer is yes.
+      const disclosure = page.locator("label", { hasText: "I am an AI agent acting on behalf of someone else" }).locator("input[type=checkbox]");
+      if (await disclosure.count()) {
+        if (!(await disclosure.isChecked())) await disclosure.evaluate((el) => el.click());
+        if (!(await disclosure.isChecked())) throw new Error("could not confirm agent disclosure; not submitting");
       }
 
       // Submit exactly once. Never retry, even on timeout or an unchanged page.
