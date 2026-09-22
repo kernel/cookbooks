@@ -13,29 +13,27 @@
 
 # fx, co-located with its browser
 
-[fx](https://fx.sh) is Vercel Labs' terminal-first coding agent.
-
-this cookbook runs fx alongside chromium in the same linux environment. fx sends browser-control calls to the local playwright endpoint instead of routing each one through KERNEL's public api.
-
-the script uses [file i/o](https://www.kernel.sh/docs/browsers/file-io) to upload the fx binary and a wrapper script, then uses [process execution](https://www.kernel.sh/docs/browsers/process-execution) to run them. fx still sends model requests to vercel ai gateway; only its browser-control calls use the local endpoint.
+[fx](https://fx.sh) is Vercel Labs' terminal-first coding agent. This cookbook embeds fx's agent kernel, [`libfx`](https://fx.sh/docs/lib/node), directly inside a [KERNEL Browser REPL](https://www.kernel.sh/docs/browsers/repl) — a persistent Node.js process that lives alongside Chromium in the same VM. fx's tool calls run in-process against that VM's browser-control helpers; none of them leave the machine.
 
 > this is a minimal end-to-end example of co-locating an agent with its browser. it demonstrates the mechanism, not a production deployment pattern.
 
 ## how it works
 
 1. `kernel browsers create` starts a browser and returns its session id and live-view url.
-2. `kernel browsers fs upload` copies a pinned, checksum-verified fx binary into the browser's linux environment.
-3. the script uploads a wrapper that checks the local endpoint at `127.0.0.1:10001`, then teaches fx to send playwright code to it.
-4. `kernel browsers process exec` runs the wrapper synchronously with the model, task, and vercel ai gateway credential in its environment. the script decodes stdout and stderr, then fails if the process returns a nonzero exit code.
-5. an exit trap deletes the browser after success, failure, timeout, or interruption.
+2. `kernel browsers process exec` runs `npm install -g libfx` in the browser's linux environment.
+3. `kernel browsers repl` sends one script into the browser's persistent Node runtime. That script:
+   - dynamically imports `libfx` and creates an fx agent with the Vercel AI Gateway credential
+   - gives the agent five tools — `goto`, `snapshot`, `click`, `type`, and `js` — whose `execute()` callbacks call the REPL's own browser-control helpers (`gotoUrl`, `accessibilitySnapshot`, `click`, `fillInput`, `js`) directly, with no network hop
+   - runs the agent's turn to completion and writes the result back with `repl.write(...)`
+4. an exit trap deletes the browser after success, failure, timeout, or interruption.
 
-fx does not use a native KERNEL adapter in this example. its system prompt tells it to write a json payload containing playwright code and send that payload to the local endpoint with `curl`. the request body, available browser objects, and returned value follow the [playwright execution](https://www.kernel.sh/docs/browsers/playwright-execution) contract. because the endpoint listens on `127.0.0.1`, it is reachable only from processes running alongside that browser.
+Earlier versions of this cookbook uploaded a pinned fx CLI binary and drove it against a local `/playwright/execute` endpoint. `libfx` is the embeddable counterpart to that CLI, published on npm with no runtime dependencies, so it installs and imports like any other Node package inside the REPL — see the [Browser REPL guide](https://www.kernel.sh/docs/browsers/repl#patchright-and-playwright-core) for the general "install then dynamically import" pattern this follows.
 
 ## prerequisites
 
 - the [KERNEL cli](https://www.kernel.sh/docs/reference/cli), authenticated with `KERNEL_API_KEY` or `kernel login`
 - a [vercel ai gateway](https://vercel.com/docs/ai-gateway) api key in `AI_GATEWAY_API_KEY`
-- `curl`, `jq`, `mktemp`, `tar`, and either `sha256sum` or `shasum`
+- `curl`, `jq`, and `mktemp`
 
 ## run it
 
@@ -49,7 +47,19 @@ export AI_GATEWAY_API_KEY="your-ai-gateway-api-key"
 
 the first two lines contain the browser session id and live-view url. open the live view while the script is running to watch fx drive chromium.
 
-the final output is fx's json response. a successful response has an `exit_code` of `0` and a nonempty `final_output` containing five hacker news article titles. the titles change with the front page. after the script exits, its cleanup trap deletes the browser and the live-view url stops working.
+the final output is fx's answer text. the default task asks for five hacker news article titles, which change with the front page. after the script exits, its cleanup trap deletes the browser and the live-view url stops working.
+
+## the tools
+
+| tool | purpose |
+| --- | --- |
+| `goto` | navigate to a url, wait for load, return page info |
+| `snapshot` | get an accessibility-tree snapshot; each node's `backendNodeId` is what `click` and `type` act on |
+| `click` | click a node's `backendNodeId` from the most recent snapshot |
+| `type` | fill an input node's `backendNodeId` from the most recent snapshot, optionally pressing enter |
+| `js` | evaluate a javascript function body against the page for anything the other tools can't express |
+
+`backendNodeId`s go stale once the DOM changes — the agent's instructions tell it to re-snapshot after navigating or acting.
 
 ## configuration
 
@@ -59,22 +69,22 @@ the script accepts these optional environment variables:
 | --- | --- | --- |
 | `FX_MODEL` | `anthropic/claude-sonnet-4.5` | model requested through vercel ai gateway |
 | `FX_TASK` | retrieve the top five hacker news titles | prompt given to fx |
-| `FX_VERSION` | `v0.0.9` | pinned fx release uploaded to the browser environment |
-| `FX_SHA256` | checksum for `v0.0.9` | expected checksum for the fx archive; update it with `FX_VERSION` |
+| `LIBFX_VERSION` | `0.0.10` | pinned `libfx` version installed into the browser environment |
 | `BROWSER_TIMEOUT_SECONDS` | `900` | browser inactivity timeout |
-| `PROCESS_TIMEOUT_SECONDS` | `90` | maximum time allowed for the synchronous fx process |
+| `PROCESS_TIMEOUT_SECONDS` | `60` | maximum time allowed for the `npm install` |
+| `REPL_TIMEOUT_SECONDS` | `90` | maximum time allowed for the agent's REPL execution |
 
-the wrapper uses `fx ask --yolo` because `process.exec` is non-interactive. this allows fx to run shell commands without asking for approval. use this example only with tasks and sites you trust. `AI_GATEWAY_API_KEY` is available to fx as an environment variable while it runs and appears in the local `kernel` cli arguments while the process starts. for production, call the process api through an sdk so the credential is sent in the request body instead of a command-line argument.
+`AI_GATEWAY_API_KEY` is embedded into the script sent to the REPL over stdin, never passed as a `process exec` command-line argument, so it never appears in local `ps` output.
 
 ## adapt the example
 
-- replace fx with another agent binary or script
+- add more tools (`scroll`, `emitImage` for screenshots) as your tasks need them
 - change `FX_TASK` and `FX_MODEL` for your workload
-- use `process.spawn` with output streaming, status checks, and explicit termination for a long-running agent
+- consume `tool_start`/`tool_end` events from `agent.prompt(...)` if you want to stream progress instead of only the final answer
 - upload input files or retrieve generated artifacts with [file i/o](https://www.kernel.sh/docs/browsers/file-io)
 
 ## related
 
-- [process execution](https://www.kernel.sh/docs/browsers/process-execution) — run commands and manage processes alongside the browser
-- [file i/o](https://www.kernel.sh/docs/browsers/file-io) — transfer files to and from the browser environment
+- [Browser REPL](https://www.kernel.sh/docs/browsers/repl) — persistent JavaScript execution in the browser's VM
+- [libfx](https://fx.sh/docs/lib/node) — fx's embeddable agent kernel for JavaScript hosts
 - [fx integration guide](https://www.kernel.sh/docs/integrations/vercel/fx) — give fx a KERNEL browser over mcp instead of co-locating it

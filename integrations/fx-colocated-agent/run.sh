@@ -1,36 +1,23 @@
 #!/bin/sh
-# run fx alongside a KERNEL browser so browser-control calls use the local
-# playwright endpoint instead of KERNEL's public api.
+# run fx (embedded via libfx) alongside a KERNEL browser, using the Browser
+# REPL so its tool calls run in-process instead of over a local HTTP hop.
 set -eu
 
-for dependency in curl jq kernel mktemp tar; do
+for dependency in curl jq kernel mktemp; do
   if ! command -v "$dependency" >/dev/null 2>&1; then
     echo "missing required command: $dependency" >&2
     exit 1
   fi
 done
 
-if command -v sha256sum >/dev/null 2>&1; then
-  verify_checksum() {
-    sha256sum -c -
-  }
-elif command -v shasum >/dev/null 2>&1; then
-  verify_checksum() {
-    shasum -a 256 -c -
-  }
-else
-  echo "missing required command: sha256sum or shasum" >&2
-  exit 1
-fi
-
 : "${AI_GATEWAY_API_KEY:?set AI_GATEWAY_API_KEY before running this script}"
 
 FX_MODEL=${FX_MODEL:-anthropic/claude-sonnet-4.5}
 FX_TASK=${FX_TASK:-Go to https://news.ycombinator.com and tell me the top 5 article titles.}
-FX_VERSION=${FX_VERSION:-v0.0.9}
-FX_SHA256=${FX_SHA256:-710069648015f37f68123adc6f9f6137d7075681fb7a0881e251c1b9fe860a85}
+LIBFX_VERSION=${LIBFX_VERSION:-0.0.10}
 BROWSER_TIMEOUT_SECONDS=${BROWSER_TIMEOUT_SECONDS:-900}
-PROCESS_TIMEOUT_SECONDS=${PROCESS_TIMEOUT_SECONDS:-90}
+PROCESS_TIMEOUT_SECONDS=${PROCESS_TIMEOUT_SECONDS:-60}
+REPL_TIMEOUT_SECONDS=${REPL_TIMEOUT_SECONDS:-90}
 
 SESSION_ID=
 LOCAL_TMP_DIR=$(mktemp -d)
@@ -65,41 +52,121 @@ LIVE_VIEW_URL=$(printf '%s' "$BROWSER_JSON" | jq -er '.browser_live_view_url')
 printf 'browser session: %s\n' "$SESSION_ID"
 printf 'live view: %s\n' "$LIVE_VIEW_URL"
 
-FX_ARCHIVE="$LOCAL_TMP_DIR/fx-linux-x86_64.tar.gz"
-curl -fsSL "https://releases.fx.sh/${FX_VERSION}/fx-linux-x86_64.tar.gz" -o "$FX_ARCHIVE"
-printf '%s  %s\n' "$FX_SHA256" "$FX_ARCHIVE" | verify_checksum
-tar -xzf "$FX_ARCHIVE" -C "$LOCAL_TMP_DIR" fx
+process_exec --timeout "$PROCESS_TIMEOUT_SECONDS" --command npm --args install --args -g --args "libfx@$LIBFX_VERSION"
 
-kernel browsers fs upload "$SESSION_ID" --file "$LOCAL_TMP_DIR/fx:/tmp/fx"
-process_exec --command chmod --args +x --args /tmp/fx
+CONFIG_JSON=$(jq -cn \
+  --arg apiKey "$AI_GATEWAY_API_KEY" \
+  --arg model "$FX_MODEL" \
+  --arg task "$FX_TASK" \
+  '{apiKey: $apiKey, model: $model, task: $task}')
 
-cat > "$LOCAL_TMP_DIR/run_fx.sh" <<'EOF'
-#!/bin/sh
-set -eu
+AGENT_SCRIPT="$LOCAL_TMP_DIR/agent.js"
+{
+  printf 'const config = %s;\n' "$CONFIG_JSON"
+  cat <<'EOF'
+const { createFxAgent } = await import('libfx');
 
-SYSTEM_PROMPT="you control a live chromium browser running alongside you. \
-to drive it, write a json payload file containing \
-{\"code\": \"<playwright typescript>\"}, where the code has page, context, \
-and browser bound. send it with: curl --fail-with-body --silent --show-error \
--X POST http://127.0.0.1:10001/playwright/execute \
--H 'Content-Type: application/json' --data-binary @payload.json . \
-the response's result field holds whatever your code returns. use this local \
-endpoint, rather than a direct http fetch, to read page content."
+let lastSnapshot = null;
 
-cd /tmp
-curl --fail-with-body --silent --show-error \
-  -X POST http://127.0.0.1:10001/playwright/execute \
-  -H 'Content-Type: application/json' \
-  --data-binary '{"code":"return { ready: true }"}' >/dev/null
-/tmp/fx ask --yolo --no-save --json --system "$SYSTEM_PROMPT" "$FX_TASK"
+function findNode(backendNodeId) {
+  const node = lastSnapshot?.nodes?.find((n) => n.backendNodeId === backendNodeId);
+  if (!node) throw new Error(`unknown backendNodeId: ${backendNodeId} (call snapshot first)`);
+  return node;
+}
+
+const tools = [
+  {
+    name: 'goto',
+    description: 'Navigate the browser to a URL and wait for the page to finish loading.',
+    inputSchema: { type: 'object', properties: { url: { type: 'string' } }, required: ['url'] },
+    async execute({ url }) {
+      await gotoUrl(url);
+      await waitForLoad();
+      return await pageInfo();
+    },
+  },
+  {
+    name: 'snapshot',
+    description:
+      'Get an accessibility tree snapshot of the current page. Nodes carry a ' +
+      'backendNodeId, role, and name; pass a backendNodeId to click or type. Call this ' +
+      'again after any navigation or action, since backendNodeIds go stale once the ' +
+      'DOM changes.',
+    inputSchema: { type: 'object', properties: {} },
+    async execute() {
+      lastSnapshot = await accessibilitySnapshot();
+      return lastSnapshot;
+    },
+  },
+  {
+    name: 'click',
+    description: 'Click a node returned by the most recent snapshot call.',
+    inputSchema: {
+      type: 'object',
+      properties: { backendNodeId: { type: 'integer' } },
+      required: ['backendNodeId'],
+    },
+    async execute({ backendNodeId }) {
+      await click(findNode(backendNodeId));
+      return { ok: true };
+    },
+  },
+  {
+    name: 'type',
+    description: 'Fill an input node returned by the most recent snapshot call, optionally pressing Enter afterward.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        backendNodeId: { type: 'integer' },
+        text: { type: 'string' },
+        submit: { type: 'boolean' },
+      },
+      required: ['backendNodeId', 'text'],
+    },
+    async execute({ backendNodeId, text, submit }) {
+      await fillInput(findNode(backendNodeId), text);
+      if (submit) await pressKey('Enter');
+      return { ok: true };
+    },
+  },
+  {
+    name: 'js',
+    description:
+      'Evaluate a JavaScript function body against the page and return its result, ' +
+      'for anything the other tools cannot express.',
+    inputSchema: { type: 'object', properties: { code: { type: 'string' } }, required: ['code'] },
+    async execute({ code }) {
+      return await js(new Function(code));
+    },
+  },
+];
+
+const agent = await createFxAgent({
+  apiKey: config.apiKey,
+  model: config.model,
+  instructions:
+    'You control a live Chromium browser through the tools provided. Call snapshot ' +
+    'after navigating or acting, before clicking or typing.',
+  tools,
+});
+
+const turn = agent.prompt(config.task);
+let text = '';
+for await (const event of turn) {
+  if (event.type === 'text_delta') text += event.delta;
+}
+const result = await turn.result;
+await agent.close();
+
+repl.write(JSON.stringify({ text, stopReason: result.stopReason, usage: result.usage }));
 EOF
+} > "$AGENT_SCRIPT"
 
-kernel browsers fs upload "$SESSION_ID" --file "$LOCAL_TMP_DIR/run_fx.sh:/tmp/run_fx.sh"
-process_exec --command chmod --args +x --args /tmp/run_fx.sh
+REPL_JSON=$(kernel browsers repl "$SESSION_ID" --timeout-sec "$REPL_TIMEOUT_SECONDS" -o json < "$AGENT_SCRIPT")
 
-process_exec \
-  --env "AI_GATEWAY_API_KEY=$AI_GATEWAY_API_KEY" \
-  --env "FX_MODEL=$FX_MODEL" \
-  --env "FX_TASK=$FX_TASK" \
-  --timeout "$PROCESS_TIMEOUT_SECONDS" \
-  --command /tmp/run_fx.sh
+if [ "$(printf '%s' "$REPL_JSON" | jq -r '.success')" != "true" ]; then
+  printf '%s' "$REPL_JSON" | jq -r '"error: " + .error, .stack' >&2
+  exit 1
+fi
+
+printf '%s' "$REPL_JSON" | jq -r '.content[] | select(.type == "text" and .channel == "write") | .text' | jq -r '.text'
