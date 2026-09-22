@@ -18,8 +18,7 @@ if (!AI_GATEWAY_API_KEY) {
 
 const kernel = new Kernel();
 
-// Runs inside the browser's persistent Node REPL. `config` is spliced in as a
-// JSON literal below; everything else is plain JS evaluated by the REPL.
+// Sent to the browser's persistent REPL; `config` is spliced in as JSON below.
 const AGENT_SCRIPT = `
 const { createFxAgent } = await import('libfx');
 
@@ -45,10 +44,9 @@ const tools = [
   {
     name: 'snapshot',
     description:
-      'Get an accessibility tree snapshot of the current page. Nodes carry a ' +
-      'backendNodeId, role, and name; pass a backendNodeId to click or type. Call this ' +
-      'again after any navigation or action, since backendNodeIds go stale once the ' +
-      'DOM changes.',
+      'Accessibility tree snapshot of the current page. Nodes carry a backendNodeId, ' +
+      'role, and name; pass backendNodeId to click or type. Re-snapshot after any ' +
+      'navigation or action, since backendNodeIds go stale once the DOM changes.',
     inputSchema: { type: 'object', properties: {} },
     async execute() {
       lastSnapshot = await accessibilitySnapshot();
@@ -88,9 +86,7 @@ const tools = [
   },
   {
     name: 'js',
-    description:
-      'Evaluate a JavaScript function body against the page and return its result, ' +
-      'for anything the other tools cannot express.',
+    description: 'Evaluate a JavaScript function body against the page and return its result.',
     inputSchema: { type: 'object', properties: { code: { type: 'string' } }, required: ['code'] },
     async execute({ code }) {
       return await js(new Function(code));
@@ -101,9 +97,7 @@ const tools = [
 const agent = await createFxAgent({
   apiKey: config.apiKey,
   model: config.model,
-  instructions:
-    'You control a live Chromium browser through the tools provided. Call snapshot ' +
-    'after navigating or acting, before clicking or typing.',
+  instructions: 'You control a live Chromium browser through the tools provided.',
   tools,
 });
 
@@ -124,9 +118,8 @@ async function main() {
   console.log(`live view: ${browser.browser_live_view_url}`);
 
   try {
-    // --use-openssl-ca works around browser VM images whose Node build ships a
-    // bundled CA store that can't verify the registry's current cert chain, even
-    // though the system trust store (and curl) verifies it fine.
+    // --use-openssl-ca: this VM's Node has a stale bundled CA store that can't
+    // verify the registry's current cert chain, even though curl verifies it fine.
     const install = await kernel.browsers.process.exec(browser.session_id, {
       command: "npm",
       args: ["install", "-g", `libfx@${LIBFX_VERSION}`],
