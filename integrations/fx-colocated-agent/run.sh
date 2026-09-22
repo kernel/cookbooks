@@ -52,7 +52,12 @@ LIVE_VIEW_URL=$(printf '%s' "$BROWSER_JSON" | jq -er '.browser_live_view_url')
 printf 'browser session: %s\n' "$SESSION_ID"
 printf 'live view: %s\n' "$LIVE_VIEW_URL"
 
-process_exec --timeout "$PROCESS_TIMEOUT_SECONDS" --command npm --args install --args -g --args "libfx@$LIBFX_VERSION"
+# --use-openssl-ca works around browser VM images whose Node build ships a
+# bundled CA store that can't verify the registry's current cert chain, even
+# though the system trust store (and curl) verifies it fine.
+process_exec --timeout "$PROCESS_TIMEOUT_SECONDS" \
+  --env "NODE_OPTIONS=--use-openssl-ca" \
+  --command npm --args install --args -g --args "libfx@$LIBFX_VERSION"
 
 CONFIG_JSON=$(jq -cn \
   --arg apiKey "$AI_GATEWAY_API_KEY" \
