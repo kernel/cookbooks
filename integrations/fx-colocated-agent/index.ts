@@ -1,81 +1,33 @@
-#!/bin/sh
-# run fx (embedded via libfx) alongside a KERNEL browser, using the Browser
-# REPL so its tool calls run in-process instead of over a local HTTP hop.
-set -eu
+#!/usr/bin/env node
+import "dotenv/config";
+import Kernel from "@onkernel/sdk";
 
-for dependency in curl jq kernel mktemp; do
-  if ! command -v "$dependency" >/dev/null 2>&1; then
-    echo "missing required command: $dependency" >&2
-    exit 1
-  fi
-done
+const FX_MODEL = process.env.FX_MODEL ?? "anthropic/claude-sonnet-4.5";
+const FX_TASK =
+  process.env.FX_TASK ??
+  "Go to https://news.ycombinator.com and tell me the top 5 article titles.";
+const LIBFX_VERSION = process.env.LIBFX_VERSION ?? "0.0.10";
+const BROWSER_TIMEOUT_SECONDS = Number(process.env.BROWSER_TIMEOUT_SECONDS ?? 900);
+const PROCESS_TIMEOUT_SECONDS = Number(process.env.PROCESS_TIMEOUT_SECONDS ?? 60);
+const REPL_TIMEOUT_SECONDS = Number(process.env.REPL_TIMEOUT_SECONDS ?? 90);
 
-: "${AI_GATEWAY_API_KEY:?set AI_GATEWAY_API_KEY before running this script}"
-
-FX_MODEL=${FX_MODEL:-anthropic/claude-sonnet-4.5}
-FX_TASK=${FX_TASK:-Go to https://news.ycombinator.com and tell me the top 5 article titles.}
-LIBFX_VERSION=${LIBFX_VERSION:-0.0.10}
-BROWSER_TIMEOUT_SECONDS=${BROWSER_TIMEOUT_SECONDS:-900}
-PROCESS_TIMEOUT_SECONDS=${PROCESS_TIMEOUT_SECONDS:-60}
-REPL_TIMEOUT_SECONDS=${REPL_TIMEOUT_SECONDS:-90}
-
-SESSION_ID=
-LOCAL_TMP_DIR=$(mktemp -d)
-
-cleanup() {
-  if [ -n "$SESSION_ID" ]; then
-    kernel browsers delete "$SESSION_ID" >/dev/null 2>&1 || true
-  fi
-  rm -rf "$LOCAL_TMP_DIR"
+const AI_GATEWAY_API_KEY = process.env.AI_GATEWAY_API_KEY;
+if (!AI_GATEWAY_API_KEY) {
+  throw new Error("set AI_GATEWAY_API_KEY before running this script");
 }
 
-trap cleanup EXIT
-trap 'exit 130' INT
-trap 'exit 143' TERM
+const kernel = new Kernel();
 
-process_exec() {
-  response=$(kernel browsers process exec "$SESSION_ID" --output json "$@")
-  printf '%s' "$response" | jq -jr '(.stdout_b64 // "") | @base64d'
-  printf '%s' "$response" | jq -jr '(.stderr_b64 // "") | @base64d' >&2
-
-  exit_code=$(printf '%s' "$response" | jq -er '.exit_code')
-  if [ "$exit_code" -ne 0 ]; then
-    echo "process exited with code $exit_code" >&2
-    return 1
-  fi
-}
-
-BROWSER_JSON=$(kernel browsers create -t "$BROWSER_TIMEOUT_SECONDS" -y -o json)
-SESSION_ID=$(printf '%s' "$BROWSER_JSON" | jq -er '.session_id')
-LIVE_VIEW_URL=$(printf '%s' "$BROWSER_JSON" | jq -er '.browser_live_view_url')
-
-printf 'browser session: %s\n' "$SESSION_ID"
-printf 'live view: %s\n' "$LIVE_VIEW_URL"
-
-# --use-openssl-ca works around browser VM images whose Node build ships a
-# bundled CA store that can't verify the registry's current cert chain, even
-# though the system trust store (and curl) verifies it fine.
-process_exec --timeout "$PROCESS_TIMEOUT_SECONDS" \
-  --env "NODE_OPTIONS=--use-openssl-ca" \
-  --command npm --args install --args -g --args "libfx@$LIBFX_VERSION"
-
-CONFIG_JSON=$(jq -cn \
-  --arg apiKey "$AI_GATEWAY_API_KEY" \
-  --arg model "$FX_MODEL" \
-  --arg task "$FX_TASK" \
-  '{apiKey: $apiKey, model: $model, task: $task}')
-
-AGENT_SCRIPT="$LOCAL_TMP_DIR/agent.js"
-{
-  printf 'const config = %s;\n' "$CONFIG_JSON"
-  cat <<'EOF'
+// Runs inside the browser's persistent Node REPL. `config` is spliced in as a
+// JSON literal below; everything else is plain JS evaluated by the REPL.
+const AGENT_SCRIPT = `
 const { createFxAgent } = await import('libfx');
 
 let lastSnapshot = null;
 
 function findNode(backendNodeId) {
   const node = lastSnapshot?.nodes?.find((n) => n.backendNodeId === backendNodeId);
-  if (!node) throw new Error(`unknown backendNodeId: ${backendNodeId} (call snapshot first)`);
+  if (!node) throw new Error(\`unknown backendNodeId: \${backendNodeId} (call snapshot first)\`);
   return node;
 }
 
@@ -164,14 +116,53 @@ const result = await turn.result;
 await agent.close();
 
 repl.write(JSON.stringify({ text, stopReason: result.stopReason, usage: result.usage }));
-EOF
-} > "$AGENT_SCRIPT"
+`;
 
-REPL_JSON=$(kernel browsers repl "$SESSION_ID" --timeout-sec "$REPL_TIMEOUT_SECONDS" -o json < "$AGENT_SCRIPT")
+async function main() {
+  const browser = await kernel.browsers.create({ timeout_seconds: BROWSER_TIMEOUT_SECONDS });
+  console.log(`browser session: ${browser.session_id}`);
+  console.log(`live view: ${browser.browser_live_view_url}`);
 
-if [ "$(printf '%s' "$REPL_JSON" | jq -r '.success')" != "true" ]; then
-  printf '%s' "$REPL_JSON" | jq -r '"error: " + .error, .stack' >&2
-  exit 1
-fi
+  try {
+    // --use-openssl-ca works around browser VM images whose Node build ships a
+    // bundled CA store that can't verify the registry's current cert chain, even
+    // though the system trust store (and curl) verifies it fine.
+    const install = await kernel.browsers.process.exec(browser.session_id, {
+      command: "npm",
+      args: ["install", "-g", `libfx@${LIBFX_VERSION}`],
+      env: { NODE_OPTIONS: "--use-openssl-ca" },
+      timeout_sec: PROCESS_TIMEOUT_SECONDS,
+    });
+    if ((install.exit_code ?? 0) !== 0) {
+      const stderr = Buffer.from(install.stderr_b64 ?? "", "base64").toString();
+      throw new Error(`npm install failed (exit ${install.exit_code}): ${stderr}`);
+    }
 
-printf '%s' "$REPL_JSON" | jq -r '.content[] | select(.type == "text" and .channel == "write") | .text' | jq -r '.text'
+    const config = { apiKey: AI_GATEWAY_API_KEY, model: FX_MODEL, task: FX_TASK };
+    const code = `const config = ${JSON.stringify(config)};\n${AGENT_SCRIPT}`;
+
+    const result = await kernel.browsers.repl(browser.session_id, {
+      code,
+      timeout_sec: REPL_TIMEOUT_SECONDS,
+    });
+
+    if (!result.success) {
+      throw new Error(`repl execution failed: ${result.error}\n${result.stack ?? ""}`);
+    }
+
+    const write = result.content?.find(
+      (item) => item.type === "text" && item.channel === "write",
+    );
+    if (!write || write.type !== "text") throw new Error("agent produced no output");
+
+    const { text } = JSON.parse(write.text) as { text: string };
+    console.log(text);
+  } finally {
+    await kernel.browsers.deleteByID(browser.session_id).catch(() => {});
+  }
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

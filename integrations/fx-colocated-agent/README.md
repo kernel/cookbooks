@@ -19,35 +19,34 @@
 
 ## how it works
 
-1. `kernel browsers create` starts a browser and returns its session id and live-view url.
-2. `kernel browsers process exec` runs `npm install -g libfx` in the browser's linux environment.
-3. `kernel browsers repl` sends one script into the browser's persistent Node runtime. That script:
+1. `kernel.browsers.create()` starts a browser and returns its session id and live-view url.
+2. `kernel.browsers.process.exec()` runs `npm install -g libfx` in the browser's linux environment.
+3. `kernel.browsers.repl()` sends one script into the browser's persistent Node runtime. That script:
    - dynamically imports `libfx` and creates an fx agent with the Vercel AI Gateway credential
    - gives the agent five tools — `goto`, `snapshot`, `click`, `type`, and `js` — whose `execute()` callbacks call the REPL's own browser-control helpers (`gotoUrl`, `accessibilitySnapshot`, `click`, `fillInput`, `js`) directly, with no network hop
    - runs the agent's turn to completion and writes the result back with `repl.write(...)`
-4. an exit trap deletes the browser after success, failure, timeout, or interruption.
-
-Earlier versions of this cookbook uploaded a pinned fx CLI binary and drove it against a local `/playwright/execute` endpoint. `libfx` is the embeddable counterpart to that CLI, published on npm with no runtime dependencies, so it installs and imports like any other Node package inside the REPL — see the [Browser REPL guide](https://www.kernel.sh/docs/browsers/repl#patchright-and-playwright-core) for the general "install then dynamically import" pattern this follows.
+4. a `finally` block deletes the browser after success, failure, timeout, or interruption.
 
 ## prerequisites
 
-- the [KERNEL cli](https://www.kernel.sh/docs/reference/cli), authenticated with `KERNEL_API_KEY` or `kernel login`
+- node.js and pnpm (or npm/yarn)
+- a [Kernel](https://www.kernel.sh) api key in `KERNEL_API_KEY`
 - a [vercel ai gateway](https://vercel.com/docs/ai-gateway) api key in `AI_GATEWAY_API_KEY`
-- `curl`, `jq`, and `mktemp`
 
 ## run it
 
 ```bash
-export KERNEL_API_KEY="your-kernel-api-key" # omit after `kernel login`
+pnpm install
+export KERNEL_API_KEY="your-kernel-api-key"
 export AI_GATEWAY_API_KEY="your-ai-gateway-api-key"
-./run.sh
+pnpm start
 ```
 
 ## what a successful run looks like
 
 the first two lines contain the browser session id and live-view url. open the live view while the script is running to watch fx drive chromium.
 
-the final output is fx's answer text. the default task asks for five hacker news article titles, which change with the front page. after the script exits, its cleanup trap deletes the browser and the live-view url stops working.
+the final output is fx's answer text. the default task asks for five hacker news article titles, which change with the front page. the script deletes the browser when it exits and the live-view url stops working.
 
 ## the tools
 
@@ -74,7 +73,7 @@ the script accepts these optional environment variables:
 | `PROCESS_TIMEOUT_SECONDS` | `60` | maximum time allowed for the `npm install` |
 | `REPL_TIMEOUT_SECONDS` | `90` | maximum time allowed for the agent's REPL execution |
 
-`AI_GATEWAY_API_KEY` is embedded into the script sent to the REPL over stdin, never passed as a `process exec` command-line argument, so it never appears in local `ps` output.
+`AI_GATEWAY_API_KEY` is embedded into the code string sent to `kernel.browsers.repl()` in the request body, never passed as a `process.exec` command-line argument, so it never appears in local `ps` output.
 
 ## adapt the example
 
