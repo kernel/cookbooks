@@ -148,7 +148,10 @@ async function main() {
     );
     if (!write || write.type !== "text") throw new Error("agent produced no output");
 
-    const { text } = JSON.parse(write.text) as { text: string };
+    const { text, stopReason } = JSON.parse(write.text) as { text: string; stopReason: string };
+    if (stopReason !== "end_turn") {
+      throw new Error(`fx did not complete the task (stopReason: ${stopReason}): ${text}`);
+    }
     console.log(text);
   } finally {
     await kernel.browsers.deleteByID(browser.session_id).catch(() => {});
