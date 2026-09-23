@@ -112,8 +112,20 @@ await agent.close();
 repl.write(JSON.stringify({ text, stopReason: result.stopReason, usage: result.usage }));
 `;
 
+// Node's default SIGINT/SIGTERM handling exits immediately, skipping any
+// pending `finally`. Registering these keeps the cleanup promise real for
+// an interrupted run, not just a failed or timed-out one.
+let sessionId: string | undefined;
+async function cleanupAndExit(code: number) {
+  if (sessionId) await kernel.browsers.deleteByID(sessionId).catch(() => {});
+  process.exit(code);
+}
+process.on("SIGINT", () => cleanupAndExit(130));
+process.on("SIGTERM", () => cleanupAndExit(143));
+
 async function main() {
   const browser = await kernel.browsers.create({ timeout_seconds: BROWSER_TIMEOUT_SECONDS });
+  sessionId = browser.session_id;
   console.log(`browser session: ${browser.session_id}`);
   console.log(`live view: ${browser.browser_live_view_url}`);
 
