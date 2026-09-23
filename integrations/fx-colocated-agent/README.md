@@ -66,7 +66,7 @@ the script accepts these optional environment variables:
 
 | variable | default | purpose |
 | --- | --- | --- |
-| `FX_MODEL` | `anthropic/claude-sonnet-4.5` | model requested through vercel ai gateway |
+| `FX_MODEL` | `anthropic/claude-sonnet-5` | model requested through vercel ai gateway |
 | `FX_TASK` | retrieve the top five hacker news titles | prompt given to fx |
 | `LIBFX_VERSION` | `0.0.10` | pinned `libfx` version installed into the browser environment |
 | `BROWSER_TIMEOUT_SECONDS` | `900` | browser inactivity timeout |

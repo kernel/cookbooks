@@ -2,7 +2,7 @@
 import "dotenv/config";
 import Kernel from "@onkernel/sdk";
 
-const FX_MODEL = process.env.FX_MODEL ?? "anthropic/claude-sonnet-4.5";
+const FX_MODEL = process.env.FX_MODEL ?? "anthropic/claude-sonnet-5";
 const FX_TASK =
   process.env.FX_TASK ??
   "Go to https://news.ycombinator.com and tell me the top 5 article titles.";
