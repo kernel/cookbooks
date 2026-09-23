@@ -13,7 +13,7 @@
 
 # fx, co-located with its browser
 
-[fx](https://fx.sh) is Vercel Labs' terminal-first coding agent. This cookbook embeds fx's agent kernel, [`libfx`](https://fx.sh/docs/lib/node), directly inside a [KERNEL Browser REPL](https://www.kernel.sh/docs/browsers/repl) — a persistent Node.js process that lives alongside Chromium in the same VM. fx's tool calls run in-process against that VM's browser-control helpers; none of them leave the machine.
+[fx](https://fx.sh) is Vercel Labs' terminal-first coding agent. This cookbook embeds fx's agent kernel, [`libfx`](https://fx.sh/docs/lib/node), directly inside a [KERNEL Browser REPL](https://www.kernel.sh/docs/browsers/repl) — a persistent Node.js process that lives alongside Chromium in the same VM. fx's tool calls run in-process against that VM's browser-control helpers; none of them leave the machine. Tool *results* — page content, accessibility snapshots, whatever `js` returns — still go out to the model over Vercel AI Gateway with each turn, the same as any other agent loop.
 
 > this is a minimal end-to-end example of co-locating an agent with its browser. it demonstrates the mechanism, not a production deployment pattern.
 
