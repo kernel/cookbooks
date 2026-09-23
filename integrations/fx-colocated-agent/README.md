@@ -71,7 +71,7 @@ the script accepts these optional environment variables:
 | `LIBFX_VERSION` | `0.0.10` | pinned `libfx` version installed into the browser environment |
 | `BROWSER_TIMEOUT_SECONDS` | `900` | browser inactivity timeout |
 | `PROCESS_TIMEOUT_SECONDS` | `60` | maximum time allowed for the `npm install` |
-| `REPL_TIMEOUT_SECONDS` | `90` | maximum time allowed for the agent's REPL execution |
+| `REPL_TIMEOUT_SECONDS` | `300` | maximum time allowed for the agent's REPL execution |
 
 `AI_GATEWAY_API_KEY` is embedded into the code string sent to `kernel.browsers.repl()` in the request body, never passed as a `process.exec` command-line argument, so it never appears in local `ps` output.
 

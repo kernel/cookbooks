@@ -9,7 +9,7 @@ const FX_TASK =
 const LIBFX_VERSION = process.env.LIBFX_VERSION ?? "0.0.10";
 const BROWSER_TIMEOUT_SECONDS = Number(process.env.BROWSER_TIMEOUT_SECONDS ?? 900);
 const PROCESS_TIMEOUT_SECONDS = Number(process.env.PROCESS_TIMEOUT_SECONDS ?? 60);
-const REPL_TIMEOUT_SECONDS = Number(process.env.REPL_TIMEOUT_SECONDS ?? 90);
+const REPL_TIMEOUT_SECONDS = Number(process.env.REPL_TIMEOUT_SECONDS ?? 300);
 
 const AI_GATEWAY_API_KEY = process.env.AI_GATEWAY_API_KEY;
 if (!AI_GATEWAY_API_KEY) {
