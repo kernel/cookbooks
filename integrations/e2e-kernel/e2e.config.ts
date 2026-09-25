@@ -8,9 +8,9 @@ import { kernel } from "@testerarmy/e2e/kernel";
 export default {
   targets: [
     {
-      name: "magnitasks",
+      name: "kernel-docs",
       engine: web({
-        url: process.env.APP_URL ?? "https://www.magnitasks.com",
+        url: process.env.DOCS_URL ?? "https://www.kernel.sh",
         browser: kernel({ stealth: true }),
       }),
     },
