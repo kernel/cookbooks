@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { openai } from "@ai-sdk/openai";
 import { web } from "@e2edev/web";
 import type { E2EConfig } from "e2e";
