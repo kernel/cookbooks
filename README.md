@@ -37,6 +37,7 @@ Kernel paired with the rest of your stack.
 | [claude-managed-agents](integrations/claude-managed-agents/)           | Claude Managed Agents recipes: parallel computer-use agent swarms, API keys secured via Vaults   |
 | [claude-computer-use-loop](integrations/claude-computer-use-loop/)     | Minimal implementation of Anthropic's computer use loop                                          |
 | [ai-sdk-agent](integrations/ai-sdk-agent/)                             | Natural language browser automation with the Vercel AI SDK and Kernel's Playwright execution API |
+| [e2e-kernel](integrations/e2e-kernel/)                                 | Agentic end-to-end testing for public documentation with e2e and KERNEL                    |
 | [stagehand-google-cua-agent](integrations/stagehand-google-cua-agent/) | Computer use agent with Google's Gemini 2.5 and Stagehand                                        |
 | [browser-use-model](integrations/browser-use-model/)                   | Browser Use bu-1.0 model on Kernel browser infrastructure                                        |
 | [mastra-web-task-assistant](integrations/mastra-web-task-assistant/)   | Human-in-the-loop web task assistant with memory, built on Mastra                                |
