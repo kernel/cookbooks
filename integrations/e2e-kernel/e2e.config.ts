@@ -10,6 +10,7 @@ export default {
       name: "docs",
       engine: web({
         url: process.env.DOCS_URL ?? "https://www.kernel.sh",
+        viewport: { width: 1200, height: 800 },
         browser: kernel({
           stealth: true,
           viewport: { width: 1200, height: 800 },
