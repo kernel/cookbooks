@@ -7,10 +7,10 @@ import { kernel } from "@testerarmy/e2e/kernel";
 export default {
   targets: [
     {
-      name: "kernel-docs",
+      name: "docs",
       engine: web({
         url: process.env.DOCS_URL ?? "https://www.kernel.sh",
-        browser: kernel({ stealth: true }),
+        browser: kernel({ headless: true, stealth: true }),
       }),
     },
   ],
