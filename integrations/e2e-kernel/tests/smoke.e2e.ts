@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { expect, test } from "e2e";
+import { expect } from "e2e";
+import { test } from "@e2edev/web";
 
 test("finds the browser session documentation", async ({ app, agent, screen }) => {
   await app.open("/docs/api-reference/browsers/create-a-browser-session");
@@ -10,30 +10,32 @@ test("finds the browser session documentation", async ({ app, agent, screen }) =
   ).toBeVisible();
 });
 
-test("extracts the browser session endpoint", async ({ app, agent }) => {
-  await app.open("/docs/api-reference/browsers/create-a-browser-session");
-  const endpoint = await agent.extract(
-    "read the HTTP method and endpoint path for creating a browser session",
-    {
-      schema: z.object({
-        method: z.string(),
-        path: z.string(),
-      }),
-    },
+test("has a changelog entry from the last eight days", async ({ app, web }) => {
+  await app.open("/changelog");
+  const latestEntry = await web.evaluate(
+    () => document.querySelector("time")?.textContent?.trim() ?? "",
   );
+  const postedAt = Date.parse(
+    `${latestEntry} ${new Date().getUTCFullYear()} UTC`,
+  );
+  const age = Date.now() - postedAt;
 
-  expect(endpoint.method.toUpperCase()).toBe("POST");
-  expect(endpoint.path).toBe("/browsers");
+  expect(latestEntry).not.toBe("");
+  expect(Number.isNaN(postedAt)).toBe(false);
+  expect(age).toBeGreaterThanOrEqual(0);
+  expect(age).toBeLessThan(8 * 24 * 60 * 60 * 1000);
 });
 
-test("waits for the browser session request example", async ({
+test("shows the smooth versus linear drag GIF", async ({
   app,
-  agent,
-  screen,
+  web,
 }) => {
-  await app.open("/docs/api-reference/browsers/create-a-browser-session");
-  await agent.waitFor("the page shows the POST /browsers request example");
-  await expect(
-    screen.getByText("/browsers", { exact: true }).first(),
-  ).toBeVisible();
+  await app.open("/docs/browsers/computer-controls");
+  const section = web.locator("#smooth-vs-linear-drag");
+  const gif = web.locator('img[data-path="images/smooth-drag-demo.gif"]');
+
+  await section.scrollIntoView();
+  await expect(section).toBeVisible();
+  await gif.scrollIntoView();
+  await expect(gif).toBeVisible();
 });
