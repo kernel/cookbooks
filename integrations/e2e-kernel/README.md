@@ -25,8 +25,13 @@ npm test
 
 Set `KERNEL_API_KEY` and `OPENAI_API_KEY` in `.env`. `DOCS_URL` defaults to
 `https://www.kernel.sh` and can be changed to another publicly reachable docs
-site. The browser runs headless by default, so the test does not open a second
-desktop window.
+site. The browser runs headful by default so you can watch the test in the
+Kernel live view. To run it headless, add `headless: true` to the browser
+configuration in `e2e.config.ts`:
+
+```ts
+browser: kernel({ headless: true, stealth: true })
+```
 
 ## Extend the test
 
