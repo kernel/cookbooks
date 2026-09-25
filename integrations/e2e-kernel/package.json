@@ -1,0 +1,16 @@
+{
+  "name": "e2e-kernel",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "e2e run"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^4.0.75",
+    "@e2edev/web": "0.11.0-canary-20260922135036",
+    "@testerarmy/e2e": "0.1.1",
+    "ai": "^7.0.114",
+    "dotenv": "^17.2.2",
+    "e2e": "0.15.0-canary-20260922135036"
+  }
+}
