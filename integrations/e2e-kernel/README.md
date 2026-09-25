@@ -1,7 +1,7 @@
 # e2e + KERNEL
 
-Run an agentic end-to-end test in a hosted KERNEL browser with
-[e2e](https://e2e.tester.army/docs).
+Run agentic end-to-end tests against the KERNEL documentation in a hosted
+browser with [e2e](https://e2e.tester.army/docs).
 
 The example opens the [browser session API reference][browser-session-docs], asks
 an agent to find the section explaining browser creation, and verifies the
