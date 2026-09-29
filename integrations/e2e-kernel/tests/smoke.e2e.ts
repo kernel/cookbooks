@@ -1,14 +1,18 @@
 import { expect } from "e2e";
-import { test } from "@e2edev/web";
+import { test } from "@e2e-dev/web";
 
-test("finds the browser session documentation", async ({ app, agent, screen }) => {
-  await app.open("/docs/api-reference/browsers/create-a-browser-session");
-  await agent.act("find the section that explains how to create a browser session");
-  await agent.assert("the page explains how to create a browser session");
-  await expect(
-    screen.getByRole("heading", { name: "Create a browser session" }),
-  ).toBeVisible();
-});
+test(
+  "finds the browser session documentation",
+  { video: "on" },
+  async ({ app, agent, screen }) => {
+    await app.open("/docs/api-reference/browsers/create-a-browser-session");
+    await agent.act("find the section that explains how to create a browser session");
+    await agent.assert("the page explains how to create a browser session");
+    await expect(
+      screen.getByRole("heading", { name: "Create a browser session" }),
+    ).toBeVisible();
+  },
+);
 
 test("has a changelog entry from the last eight days", async ({ app, web }) => {
   await app.open("/changelog");

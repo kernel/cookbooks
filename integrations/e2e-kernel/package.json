@@ -7,9 +7,10 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.75",
-    "@e2edev/web": "0.11.0-canary-20260922135036",
-    "@testerarmy/e2e": "0.1.1",
+    "@e2e-dev/integrations": "0.1.0-canary-20260929180659",
+    "@e2e-dev/web": "0.11.0-canary-20260929180659",
+    "@onkernel/sdk": "0.113.0",
     "ai": "^7.0.114",
-    "e2e": "0.15.0-canary-20260922135036"
+    "e2e": "0.15.0-canary-20260929180659"
   }
 }
