@@ -1,9 +1,9 @@
 import { spawnSync } from "node:child_process";
 import { chromium } from "playwright-core";
 
-const MPP_URL = "https://api.dev.onkernel.com/mpp/browsers";
+const MPP_URL = "https://api.onkernel.com/mpp/browsers";
 const CONTEXT =
-  "Buy one test-mode Kernel browser session to visit Hacker News, read its first seven story headlines, and print them to the terminal as a Link MPP payment demonstration.";
+  "Buy one Kernel browser session to visit Hacker News, read its first seven story headlines, and print them to the terminal as a Link MPP payment demonstration.";
 
 type LinkOutput = {
   id?: string;
@@ -36,7 +36,6 @@ function buyBrowser(): { cdp_ws_url: string; session_id: string; expires_at: str
     MPP_URL,
     "--method",
     "POST",
-    "--test",
     "--context",
     CONTEXT,
   );
@@ -45,7 +44,7 @@ function buyBrowser(): { cdp_ws_url: string; session_id: string; expires_at: str
     if (!purchase.id || !purchase.approval_url) {
       throw new Error("Link did not return an approval request");
     }
-    console.log(`Approve the test payment in Link: ${purchase.approval_url}`);
+    console.log(`Approve the payment in Link: ${purchase.approval_url}`);
     const approval = linkCli(
       "spend-request",
       "retrieve",
