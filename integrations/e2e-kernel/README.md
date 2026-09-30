@@ -2,6 +2,9 @@
 
 Run agentic end-to-end tests against any publicly reachable documentation site
 in a hosted browser with [e2e](https://e2e.tester.army/docs) and KERNEL.
+e2e is a test framework that combines natural-language agent steps like
+`agent.act` and `agent.assert` with deterministic locator assertions, and
+replays verified agent steps without model calls until the app changes.
 See the [KERNEL integration guide](https://e2e.tester.army/docs/integrations/kernel)
 for provider options and recording behavior.
 
