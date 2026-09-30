@@ -14,9 +14,9 @@ test(
   },
 );
 
-test("has a changelog entry from the last eight days", async ({ app, web }) => {
+test("has a changelog entry from the last eight days", async ({ app, browser }) => {
   await app.open("/changelog");
-  const latestEntry = await web.evaluate(
+  const latestEntry = await browser.evaluate(
     () => document.querySelector("time")?.textContent?.trim() ?? "",
   );
   const postedAt = Date.parse(
@@ -32,11 +32,11 @@ test("has a changelog entry from the last eight days", async ({ app, web }) => {
 
 test("shows the smooth versus linear drag GIF", async ({
   app,
-  web,
+  browser,
 }) => {
   await app.open("/docs/browsers/computer-controls");
-  const section = web.locator("#smooth-vs-linear-drag");
-  const gif = web.locator('img[data-path="images/smooth-drag-demo.gif"]');
+  const section = browser.locator("#smooth-vs-linear-drag");
+  const gif = browser.locator('img[data-path="images/smooth-drag-demo.gif"]');
 
   await section.scrollIntoView();
   await expect(section).toBeVisible();
