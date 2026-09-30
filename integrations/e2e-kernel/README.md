@@ -1,6 +1,6 @@
 ![e2e](assets/e2e-banner.png)
 
-# e2e Browser Testing
+# e2e Web Testing
 
 Run agentic end-to-end tests against any publicly reachable documentation site
 in a hosted browser with [e2e](https://e2e.tester.army/docs) and KERNEL.
