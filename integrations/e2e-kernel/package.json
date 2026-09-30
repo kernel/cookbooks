@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --env-file-if-exists=.env ./node_modules/e2e/dist/cli/bin.js run"
+    "test": "node --env-file-if-exists=.env node_modules/.bin/e2e run"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.75",
