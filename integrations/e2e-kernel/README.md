@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/e2e-logo.png" alt="e2e logo" width="55%">
+</p>
+
 # e2e + KERNEL
 
 Run agentic end-to-end tests against any publicly reachable documentation site
