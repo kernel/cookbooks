@@ -25,6 +25,7 @@ Kernel product features, each shown in a small runnable example.
 | [file-io](features/file-io/)                 | Downloads, uploads, and browser filesystem access      |
 | [ad-blocker](features/ad-blocker/)           | Ad blocker extensions in Kernel browsers               |
 | [chrome-policies](features/chrome-policies/) | Chromium Enterprise Policies in browser sessions       |
+| [mpp](features/mpp/)                         | Buy a test browser with MPP and read Hacker News headlines |
 
 ## Integrations
 
