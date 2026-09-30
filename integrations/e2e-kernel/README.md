@@ -57,8 +57,8 @@ releases it when the run finishes.
 
 ## Record replays
 
-The target records a KERNEL replay when a test fails. The first test also
-records a replay on every run with its `{ video: "on" }` option. Replays are
-saved as `video/replay.mp4` in each test attempt's folder under
+The target records a KERNEL replay when a test fails. The computer controls
+test also records a replay on every run with its `{ video: "on" }` option.
+Replays are saved as `video/replay.mp4` in each test attempt's folder under
 `.e2e/artifacts/`. To use the web screencast instead, set `replay: false` in the
 KERNEL browser configuration.
