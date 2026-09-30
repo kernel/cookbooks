@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="assets/e2e-logo.png" alt="e2e logo" width="55%">
-</p>
+![e2e](assets/e2e-banner.png)
 
 # e2e + KERNEL
 
