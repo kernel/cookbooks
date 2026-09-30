@@ -1,0 +1,17 @@
+{
+  "name": "link-mpp-browser-headlines",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx headlines.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "playwright-core": "^1.63.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  }
+}
