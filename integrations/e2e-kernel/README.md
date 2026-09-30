@@ -5,11 +5,9 @@ in a hosted browser with [e2e](https://e2e.tester.army/docs) and KERNEL.
 See the [KERNEL integration guide](https://e2e.tester.army/docs/integrations/kernel)
 for provider options and recording behavior.
 
-The included example targets the [KERNEL browser session API
-reference][browser-session-docs]. Replace the URL, paths, and assertions in the
-test file to use another documentation site.
-
-[browser-session-docs]: https://www.kernel.sh/docs/api-reference/browsers/create-a-browser-session
+The included example targets the [KERNEL documentation](https://www.kernel.sh/docs).
+Replace the URL, paths, and assertions in the test file to use another
+documentation site.
 
 ## Prerequisites
 
