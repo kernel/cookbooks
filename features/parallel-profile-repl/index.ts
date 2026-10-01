@@ -109,7 +109,9 @@ async function main() {
         const session = object(object(textPayload(response)).browser);
         if (typeof session.session_id !== "string") throw new Error("Browser creation returned no session ID");
         if (session.profile_save_changes !== true) throw new Error("Browser was not created with profile_save_changes=true");
+        if (typeof session.browser_live_view_url !== "string") throw new Error("Browser creation returned no live view URL");
         sessionId = session.session_id;
+        console.log(`live view: ${session.browser_live_view_url}`);
         const recording = await kernel.browsers.replays.start(sessionId);
         replayId = recording.replay_id;
         await writeFile(new URL("session.json", outputDir), JSON.stringify({ sessionId, profileId,
@@ -180,6 +182,7 @@ async function main() {
       }
     }
   }
+  console.log(`saved results: ${new URL("synthesis.md", outputDir).href}`);
 }
 
 main().catch(error => { console.error(error); process.exitCode = 1; });

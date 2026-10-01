@@ -116,6 +116,8 @@ five site tabs plus the initial page, with at most three active tasks.
 
 ## Results at any time
 
+See [an example completed briefing](EXAMPLE.md) from a three-task run.
+
 The printed `artifacts/<run-id>/` directory contains:
 
 - `updates.jsonl`: one terminal evidence update per task attempt, also printed to stdout.
