@@ -25,6 +25,7 @@ Kernel product features, each shown in a small runnable example.
 | [file-io](features/file-io/)                 | Downloads, uploads, and browser filesystem access      |
 | [ad-blocker](features/ad-blocker/)           | Ad blocker extensions in Kernel browsers               |
 | [chrome-policies](features/chrome-policies/) | Chromium Enterprise Policies in browser sessions       |
+| [parallel-profile-repl](features/parallel-profile-repl/) | Parallel browser tasks with Sonnet, Kernel MCP, and one write-mode profile |
 
 ## Integrations
 
