@@ -11,8 +11,9 @@ through the Kernel MCP server.
 
 Use this pattern when several tasks need the same profile at the same time and
 that profile has to stay in write mode, so changes made during the run (cookies,
-storage, sign-in state) are saved back to it. Only one browser can save changes to
-a profile at a time, so the tasks share that browser and each works in its own tab.
+storage, sign-in state) are saved back to it. Several browsers can save to the
+same profile, but their saves race and can overwrite each other's changes. Using
+one browser avoids that: the tasks share it and each works in its own tab.
 
 ```
 top-stories          |███████                                           | succeeded in 10s, 2 steps
