@@ -1,10 +1,10 @@
-import { ToolLoopAgent, isStepCount, type ToolSet } from "ai";
+import { ToolLoopAgent, hasToolCall, isStepCount, jsonSchema, tool } from "ai";
 import Kernel, { ConflictError, NotFoundError } from "@onkernel/sdk";
 import { randomUUID } from "node:crypto";
-import { appendFile, mkdir, readFile, rename, writeFile } from "node:fs/promises";
-import { setTimeout as sleep } from "node:timers/promises";
-import { connectKernel, object, replPayload, textPayload, TOOL_NAMES } from "./mcp.js";
-import { TASKS as catalog, type Task } from "./tasks.js";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { connectKernel, openTabRunner } from "./mcp.js";
+import { formatTimeline, runPool, type Span } from "./schedule.js";
+import { TASKS, type Task } from "./tasks.js";
 import { selectModel } from "./model.js";
 
 function integerEnv(name: string, fallback: number, min: number, max: number) {
@@ -13,176 +13,114 @@ function integerEnv(name: string, fallback: number, min: number, max: number) {
   return value;
 }
 
-type Attempt = {
-  attempt: number;
-  status: "pending" | "queued" | "running" | "succeeded" | "failed";
-  result?: unknown; error?: string; sourceUrl?: string; startedAt?: number; finishedAt?: number;
-};
-type TaskState = Task & Attempt & { history?: Attempt[] };
-type Snapshot = { tasks: TaskState[]; active: number; peakActive: number; complete: boolean; events: unknown[] };
+type Submission = { summary: string; findings: Array<{ text: string; url: string }>; limitations: string[] };
+type Outcome = Span & { site: string; result?: Submission; error?: string };
 
 async function main() {
   const { model, route } = selectModel();
   const requested = process.env.TASK_IDS?.split(",");
-  const tasks = requested ? catalog.filter(task => requested.includes(task.id)) : catalog;
-  if (!tasks.length || requested?.some(id => !catalog.some(task => task.id === id))) throw new Error("TASK_IDS contains an unknown task");
-  const maxActive = integerEnv("MAX_ACTIVE", 3, 1, 3);
-  const seed = integerEnv("SEED", Date.now() >>> 0, 0, 4294967295);
-  const maxSteps = integerEnv("MAX_STEPS", 50, 1, 200);
-  const runId = randomUUID();
-  const browserName = `parallel-repl-${runId}`;
-  const outputDir = new URL(`./artifacts/${runId}/`, import.meta.url);
+  if (requested?.some(id => !TASKS.some(task => task.id === id))) throw new Error("TASK_IDS contains an unknown task");
+  const tasks = requested ? TASKS.filter(task => requested.includes(task.id)) : TASKS;
+  const maxActive = integerEnv("MAX_ACTIVE", 3, 1, 6);
+  const stepsPerTask = integerEnv("STEPS_PER_TASK", 20, 1, 100);
   const profileName = process.env.PROFILE_NAME ?? "parallel-repl-agent-demo";
-  const kernel = new Kernel({ maxRetries: 0 });
+  const runId = randomUUID();
+  const outputDir = new URL(`./artifacts/${runId}/`, import.meta.url);
+  const instructions = await readFile(new URL("instructions.md", import.meta.url), "utf8");
+
+  const kernel = new Kernel();
   const mcp = await connectKernel();
-  let sessionId: string | undefined;
-  let replayId: string | undefined;
-  let browserCreateAttempted = false;
-  let initialized = false;
-  let polling = true;
-  let monitor: Promise<void> | undefined;
   const abort = new AbortController();
   const interrupt = () => abort.abort(new Error("Run interrupted; cleaning up the browser"));
   process.once("SIGINT", interrupt);
   process.once("SIGTERM", interrupt);
-  const deadline = setTimeout(() => abort.abort(new Error("Agent exceeded its 20-minute limit")), 20 * 60_000);
-  const delivered = new Set<string>();
-  let snapshot: Snapshot = { tasks: tasks.map(task => ({ ...task, status: "pending", attempt: 0 })), active: 0, peakActive: 0, complete: false, events: [] };
-
-  async function publish() {
-    const report = { runId, seed, updatedAt: new Date().toISOString(), ...snapshot };
-    for (const task of snapshot.tasks) {
-      const { history = [], ...current } = task;
-      for (const attempt of [...history, current]) {
-        const key = `${task.id}:${attempt.attempt}`;
-        if (["succeeded", "failed"].includes(attempt.status) && !delivered.has(key)) {
-          const update = { type: "task-result", observedAt: report.updatedAt, id: task.id, site: task.site, ...attempt };
-          await appendFile(new URL("updates.jsonl", outputDir), JSON.stringify(update) + "\n");
-          console.log(JSON.stringify(update));
-          delivered.add(key);
-        }
-      }
-    }
-    const brief = ["# Developer briefing — evidence so far", "", snapshot.complete ? "All tasks finished; see synthesis.md for the agent's interpretation." : "Partial results. Other tasks are pending or running.", "",
-      ...snapshot.tasks.flatMap(task => [`## ${task.id} (${task.status})`, "", task.purpose, "",
-        task.error ?? (task.result === undefined ? "No result yet." : "```json\n" + JSON.stringify(task.result, null, 2) + "\n```"), ""]),
-    ].join("\n");
-    for (const [name, body] of [["snapshot.json", JSON.stringify(report, null, 2)], ["briefing.md", brief]]) {
-      await writeFile(new URL(name + ".tmp", outputDir), body);
-      await rename(new URL(name + ".tmp", outputDir), new URL(name, outputDir));
-    }
-  }
-
-  async function repl(code: string) {
-    return replPayload(await mcp.call("browser_repl", { session_id: sessionId, code, timeout_sec: 30 }));
-  }
-  async function poll() {
-    snapshot = await repl("repl.write(JSON.stringify(demo.snapshot()));") as Snapshot;
-    await publish();
-  }
+  let sessionId: string | undefined;
+  const outcomes: Outcome[] = [];
 
   try {
-    await mkdir(outputDir, { recursive: true, mode: 0o700 });
-    console.log(`model: ${model.modelId}; route: ${route}; seed: ${seed}; artifacts: ${outputDir.pathname}`);
-    await publish();
+    await mkdir(outputDir, { recursive: true });
     let profile;
     try { profile = await kernel.profiles.create({ name: profileName }); }
     catch (error) {
       if (!(error instanceof ConflictError)) throw error;
       profile = await kernel.profiles.retrieve(profileName);
     }
-    const profileId = profile.id;
-    const runtime = await readFile(new URL("runtime.js", import.meta.url), "utf8");
-    const tools: ToolSet = {
-      manage_profiles: { ...mcp.tools.manage_profiles, execute: async input => {
-        if (object(input).action !== "get") throw new Error("Use get; the harness owns the dedicated profile's lifecycle.");
-        return mcp.call("manage_profiles", { action: "get", profile_id: profileId });
-      } },
-      manage_browsers: { ...mcp.tools.manage_browsers, execute: async input => {
-        const action = object(input).action;
-        if (action === "get" && sessionId) return mcp.call("manage_browsers", { action: "get", session_id: sessionId });
-        if (action !== "create" || browserCreateAttempted) throw new Error("Create exactly one browser; use get afterwards. The harness handles deletion.");
-        browserCreateAttempted = true;
-        const response = await mcp.call("manage_browsers", { action: "create", name: browserName,
-          profile_id: profileId, save_profile_changes: true, headless: false,
-          start_url: "https://example.com", timeout_seconds: 300 });
-        const session = object(object(textPayload(response)).browser);
-        if (typeof session.session_id !== "string") throw new Error("Browser creation returned no session ID");
-        if (session.profile_save_changes !== true) throw new Error("Browser was not created with profile_save_changes=true");
-        if (typeof session.browser_live_view_url !== "string") throw new Error("Browser creation returned no live view URL");
-        sessionId = session.session_id;
-        console.log(`live view: ${session.browser_live_view_url}`);
-        const recording = await kernel.browsers.replays.start(sessionId);
-        replayId = recording.replay_id;
-        await writeFile(new URL("session.json", outputDir), JSON.stringify({ sessionId, profileId,
-          liveView: session.browser_live_view_url, replay: recording.replay_view_url }, null, 2), { mode: 0o600 });
-        console.log(`browser: ${sessionId}; recording started (private links in session.json)`);
-        await repl(`var playwright = await import("patchright");
-          var pwBrowser = await playwright.chromium.connectOverCDP(process.env.CDP_ENDPOINT);
-          var pwContext = pwBrowser.contexts()[0];
-          ${runtime}
-          var demo = createTaskRunner(${JSON.stringify({ tasks, maxActive, seed, runId })}, pwContext);
-          repl.write(JSON.stringify({ ready: true }));`);
-        initialized = true;
-        monitor = (async () => {
-          while (polling) { await poll(); await sleep(1000); }
-        })().catch(error => { abort.abort(error); throw error; });
-        void monitor.catch(() => undefined);
-        return { content: [{ type: "text", text: JSON.stringify({ session_id: sessionId, profile_id: profileId, ready: true }) }] };
-      } },
-      browser_repl: { ...mcp.tools.browser_repl, execute: async input => {
-        const args = object(input);
-        if (!initialized || !sessionId) throw new Error("Create the browser before using Browser REPL");
-        if (args.reset) throw new Error("Reset would discard all concurrent work; it is disabled for this cookbook.");
-        return mcp.call("browser_repl", { session_id: sessionId, code: args.code, timeout_sec: 30 });
-      } },
-    };
-    const instructions = await readFile(new URL("instructions.md", import.meta.url), "utf8");
-    const agent = new ToolLoopAgent({
-      model, tools, activeTools: [...TOOL_NAMES],
-      maxRetries: 0, stopWhen: isStepCount(maxSteps), instructions,
-      onStepFinish: async step => {
-        const update = { type: "agent-step", at: new Date().toISOString(), text: step.text,
-          tools: step.toolCalls.map(call => call.toolName) };
-        await appendFile(new URL("agent.jsonl", outputDir), JSON.stringify(update) + "\n");
-        console.log(JSON.stringify(update));
-      },
-    });
-    const result = await agent.generate({ prompt: `Complete these independent tasks, using their purposes as instructions. The concurrency cap is ${maxActive}.\n${JSON.stringify(tasks, null, 2)}`, abortSignal: abort.signal });
-    polling = false;
-    await monitor;
-    if (!initialized) throw new Error("Agent ended without creating its browser");
-    await poll();
-    await writeFile(new URL("synthesis.md", outputDir), result.text);
-    await writeFile(new URL("results.json", outputDir), JSON.stringify({ model: model.modelId, route, seed, usage: result.totalUsage, ...snapshot }, null, 2));
-    if (!snapshot.complete || snapshot.tasks.some(task => task.status === "failed")) throw new Error("Some tasks failed or remain unfinished; inspect snapshot.json and synthesis.md");
-    if (snapshot.peakActive > maxActive) throw new Error("Task concurrency exceeded its cap");
-    console.log(result.text);
-  } finally {
-    clearTimeout(deadline);
-    process.removeListener("SIGINT", interrupt);
-    process.removeListener("SIGTERM", interrupt);
-    polling = false;
-    try { await monitor; }
-    finally {
+    const browser = await kernel.browsers.create({ name: `parallel-repl-${runId}`, headless: false,
+      timeout_seconds: 300, profile: { id: profile.id, save_changes: true } });
+    sessionId = browser.session_id;
+    console.log(`model: ${model.modelId} (${route}); profile: ${profileName}; ${tasks.length} tasks, ${maxActive} at a time, ${stepsPerTask} steps each`);
+    console.log(`live view: ${browser.browser_live_view_url}`);
+    const tabs = await openTabRunner(mcp, sessionId);
+
+    async function runTask(task: Task) {
+      const log = (message: string) => console.log(`[${task.id}] ${message}`);
+      const outcome: Outcome = { id: task.id, site: task.site, status: "failed", steps: 0, startedAt: Date.now(), finishedAt: 0 };
+      outcomes.push(outcome);
       try {
-        if (sessionId && replayId) {
-          await kernel.browsers.replays.stop(replayId, { id_or_name: sessionId });
-          const recording = await kernel.browsers.replays.download(replayId, { id_or_name: sessionId });
-          await writeFile(new URL("replay.mp4", outputDir), Buffer.from(await recording.arrayBuffer()));
+        abort.signal.throwIfAborted();
+        await tabs.open(task.id);
+        const agent = new ToolLoopAgent({
+          model, instructions,
+          stopWhen: [isStepCount(stepsPerTask), hasToolCall("submit_result")],
+          tools: {
+            browser_repl: tool({
+              description: "Run JavaScript against your own tab. Receives page, state, and repl.write; see the instructions.",
+              inputSchema: jsonSchema<{ code: string }>({ type: "object", properties: { code: { type: "string" } }, required: ["code"] }),
+              execute: ({ code }) => tabs.run(task.id, code, abort.signal),
+            }),
+            submit_result: tool({
+              description: "Submit the task result. Call once, when finished.",
+              inputSchema: jsonSchema<Submission>({ type: "object", required: ["summary", "findings", "limitations"], properties: {
+                summary: { type: "string" },
+                findings: { type: "array", items: { type: "object", required: ["text", "url"],
+                  properties: { text: { type: "string" }, url: { type: "string" } } } },
+                limitations: { type: "array", items: { type: "string" } },
+              } }),
+              execute: async () => ({ recorded: true }),
+            }),
+          },
+          onStepFinish: step => {
+            const calls = step.toolResults.map(result => result.toolName === "browser_repl" && (result.output as { error?: string }).error
+              ? "browser_repl (code error)" : result.toolName);
+            log(`step ${++outcome.steps}/${stepsPerTask}: ${calls.join(", ") || "no tool call"}`);
+          },
+        });
+        const result = await agent.generate({ abortSignal: abort.signal,
+          prompt: `Task ${task.id} on ${task.site}: ${task.purpose}\nStart at ${task.url}\nYou have ${stepsPerTask} steps.` });
+        const submission = result.steps.flatMap(step => step.toolCalls).find(call => call.toolName === "submit_result");
+        if (submission) {
+          outcome.status = "succeeded";
+          outcome.result = submission.input as Submission;
+        } else {
+          outcome.error = result.steps.length >= stepsPerTask ? `Used all ${stepsPerTask} steps without submitting` : "Stopped without submitting";
         }
+      } catch (error) {
+        outcome.error = String(error);
       } finally {
-        try {
-          // The unique name also covers a create call with an ambiguous response.
-          if (browserCreateAttempted) {
-            try { await kernel.browsers.deleteByID(sessionId ?? browserName); }
-            catch (error) { if (!(error instanceof NotFoundError)) throw error; }
-          }
-        } finally { await mcp.client.close(); }
+        await tabs.close(task.id).catch(() => undefined);
+        outcome.finishedAt = Date.now();
+        log(outcome.status === "succeeded" ? `done: ${outcome.result!.summary}` : `failed: ${outcome.error}`);
       }
     }
+
+    await runPool(tasks, maxActive, runTask);
+    abort.signal.throwIfAborted();
+  } finally {
+    process.removeListener("SIGINT", interrupt);
+    process.removeListener("SIGTERM", interrupt);
+    try {
+      if (sessionId) {
+        try { await kernel.browsers.deleteByID(sessionId); }
+        catch (error) { if (!(error instanceof NotFoundError)) throw error; }
+      }
+    } finally { await mcp.client.close(); }
+    if (outcomes.length) {
+      await writeFile(new URL("results.json", outputDir), JSON.stringify({ runId, model: model.modelId, maxActive, stepsPerTask, tasks: outcomes }, null, 2));
+      console.log("\n" + formatTimeline(outcomes.filter(outcome => outcome.finishedAt)));
+      console.log(`\nresults: ${new URL("results.json", outputDir).pathname}`);
+    }
   }
-  console.log(`saved results: ${new URL("synthesis.md", outputDir).href}`);
+  if (outcomes.some(outcome => outcome.status !== "succeeded")) process.exitCode = 1;
 }
 
 main().catch(error => { console.error(error); process.exitCode = 1; });

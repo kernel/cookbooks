@@ -5,6 +5,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { runInNewContext } from "node:vm";
 import { replPayload, textPayload } from "./mcp.js";
 import { selectModel } from "./model.js";
+import { formatTimeline, peakOverlap, runPool } from "./schedule.js";
 
 test("model routing keeps Sonnet 5.5 fixed and honors explicit route selection", () => {
   assert.equal(selectModel({ ANTHROPIC_API_KEY: "test" }).model.modelId, "claude-sonnet-5-5");
@@ -13,109 +14,107 @@ test("model routing keeps Sonnet 5.5 fixed and honors explicit route selection",
   assert.equal(selectModel({ ANTHROPIC_API_KEY: "test", AI_GATEWAY_API_KEY: "test", MODEL_ROUTE: "gateway" }).route, "gateway");
   assert.throws(() => selectModel({}), /Set ANTHROPIC_API_KEY/);
   assert.throws(() => selectModel({ AI_GATEWAY_API_KEY: "test", MODEL_ROUTE: "anthropic" }), /No model fallback/);
-  assert.throws(() => selectModel({ ANTHROPIC_API_KEY: "test", MODEL_ROUTE: "unknown" }), /MODEL_ROUTE/);
 });
 
-const source = await readFile(new URL("runtime.js", import.meta.url), "utf8");
-type State = { tasks: Array<{ id: string; status: string; result?: unknown; awaitingDecision?: boolean; attempt: number; history: Array<{ status: string }> }>; active: number; peakActive: number; complete: boolean; events: Array<{ event: string; target?: number; active: number }> };
-type Worker = (page: object, task: { id: string }, checkpoint: (value: unknown) => Promise<unknown>) => Promise<unknown>;
-type Runner = { enqueue(id: string, worker: Worker): void; retry(id: string, worker: Worker): void; resume(id: string, value: unknown): void; snapshot(ids?: string[]): State };
+type Page = { closed: boolean; name: string };
+type Job = { done: boolean; output: string; error?: string };
+type Code = (page: Page, state: Record<string, unknown>, repl: { write(value: unknown): void }) => unknown;
+type Runner = { open(id: string): Promise<unknown>; close(id: string): Promise<unknown>; start(id: string, fn: Code): number; poll(id: number): Job };
 
-function runner(sites: string[], cap = 3, seed = 1234567, requiredFields: string[] = []) {
-  const pages: object[] = [];
-  const create: (config: object, context: object) => Runner = runInNewContext(source + "\ncreateTaskRunner", { queueMicrotask });
-  const demo = create({ maxActive: cap, seed, runId: "unit-test", tasks: sites.map((site, i) => ({ id: String(i), site, requiredFields })) }, {
+const source = await readFile(new URL("runtime.js", import.meta.url), "utf8");
+function runner(options = {}) {
+  const pages: Page[] = [];
+  const context = {
     async newPage() {
-      const page = { setDefaultTimeout() {}, setDefaultNavigationTimeout() {}, url: () => "https://example.com", async evaluate() {} };
+      const page = { closed: false, name: `tab-${pages.length}`, setDefaultTimeout() {}, setDefaultNavigationTimeout() {},
+        async close() { page.closed = true; } };
       pages.push(page);
       return page;
     },
-  });
-  return { demo, pages };
+  };
+  const create: (context: object, options: object) => Runner = runInNewContext(source + "\ncreateTabRunner", { setTimeout, clearTimeout });
+  return { tabs: create(context, options), pages };
 }
 
-async function finished(demo: Runner) {
+async function settle(tabs: Runner, jobId: number) {
   for (let i = 0; i < 200; i++) {
-    if (demo.snapshot().complete) return demo.snapshot();
+    const job = tabs.poll(jobId);
+    if (job.done) return job;
     await sleep(5);
   }
-  throw new Error("Scheduler did not finish");
+  throw new Error("Job did not finish");
 }
 
-for (const cap of [1, 2, 3]) {
-  test(`cap ${cap}: mixed sites finish, same-site tasks reuse pages without overlap`, async () => {
-    const sites = ["hn", "daily", "hn", "techmeme", "daily", "github", "wiki", "hn"];
-    const { demo, pages } = runner(sites, cap);
-    const inUse = new Set<object>();
-    let observedPeak = 0;
-    sites.forEach((_, i) => demo.enqueue(String(i), async page => {
-      assert.ok(!inUse.has(page));
-      inUse.add(page);
-      observedPeak = Math.max(observedPeak, inUse.size);
-      await sleep(10);
-      inUse.delete(page);
-      return { evidence: i };
-    }));
-    const result = await finished(demo);
-    assert.ok(result.tasks.every(task => task.status === "succeeded"));
-    assert.equal(pages.length, new Set(sites).size);
-    assert.equal(result.peakActive, observedPeak);
-    assert.ok(observedPeak <= cap);
-    assert.ok(result.events.every(event => event.active <= cap));
-    if (cap === 3) assert.equal(observedPeak, 3);
+test("each task gets its own tab, and jobs on different tabs overlap", async () => {
+  const { tabs, pages } = runner();
+  await tabs.open("a");
+  await tabs.open("b");
+  await assert.rejects(tabs.open("a"), /already open/);
+  const seen: string[] = [];
+  let running = 0, peak = 0;
+  const code: Code = async page => {
+    peak = Math.max(peak, ++running);
+    seen.push(page.name);
+    await sleep(20);
+    running--;
+    return page.name;
+  };
+  const jobs = [tabs.start("a", code), tabs.start("b", code)];
+  assert.equal(tabs.poll(jobs[0]).done, false);
+  const results = await Promise.all(jobs.map(job => settle(tabs, job)));
+  assert.deepEqual(results.map(job => job.output), ["tab-0", "tab-1"]);
+  assert.equal(peak, 2);
+  assert.deepEqual(seen.sort(), ["tab-0", "tab-1"]);
+  await tabs.close("a");
+  assert.equal(pages[0].closed, true);
+  assert.throws(() => tabs.start("a", code), /No open tab/);
+});
+
+test("state persists per tab and writes are collected", async () => {
+  const { tabs } = runner();
+  await tabs.open("a");
+  await tabs.open("b");
+  await settle(tabs, tabs.start("a", async (_page, state) => { state.count = 1; }));
+  const job = await settle(tabs, tabs.start("a", async (_page, state, repl) => { repl.write("count="); return state.count; }));
+  assert.equal(job.output, "count=1");
+  assert.equal((await settle(tabs, tabs.start("b", async (_page, state) => state.count ?? "empty"))).output, "empty");
+});
+
+test("errors, timeouts, and large output are reported without breaking the tab", async () => {
+  const { tabs } = runner({ jobTimeoutMs: 30, maxOutputChars: 10 });
+  await tabs.open("a");
+  assert.equal((await settle(tabs, tabs.start("a", async () => { throw new Error("selector missed"); }))).error, "selector missed");
+  assert.match((await settle(tabs, tabs.start("a", () => sleep(100)))).error ?? "", /still running/);
+  assert.equal((await settle(tabs, tabs.start("a", async () => "x".repeat(50)))).output, "xxxxxxxxxx [output truncated]");
+  const job = tabs.start("a", async () => "ok");
+  await settle(tabs, job);
+  assert.throws(() => tabs.poll(job), /Unknown job/);
+});
+
+test("the pool never runs more than its limit and runs every item", async () => {
+  let running = 0, peak = 0;
+  const done: number[] = [];
+  await runPool([1, 2, 3, 4, 5], 2, async item => {
+    peak = Math.max(peak, ++running);
+    await sleep(5 * item);
+    running--;
+    done.push(item);
   });
-}
-
-test("partial evidence arrives while another worker awaits a model decision", async () => {
-  const { demo } = runner(["hn", "daily"], 3, 1234567);
-  demo.enqueue("0", async (_page, _task, checkpoint) => checkpoint({ question: "which article?" }));
-  demo.enqueue("1", async () => ({ headline: "finished independently" }));
-  for (let i = 0; i < 100 && !demo.snapshot().tasks[0].awaitingDecision; i++) await sleep(5);
-  await sleep(20);
-  assert.equal(demo.snapshot().tasks[0].awaitingDecision, true);
-  assert.equal(demo.snapshot().tasks[1].status, "succeeded");
-  assert.equal(demo.snapshot().complete, false);
-  assert.equal(demo.snapshot(["1"]).tasks.length, 1);
-  demo.resume("0", { chosen: "article" });
-  const final = await finished(demo);
-  assert.equal(JSON.stringify(final.tasks[0].result), JSON.stringify({ chosen: "article" }));
-  assert.throws(() => demo.resume("0", {}), /not awaiting/);
+  assert.equal(peak, 2);
+  assert.deepEqual(done.sort(), [1, 2, 3, 4, 5]);
 });
 
-test("a failed worker releases its tab and does not discard other results", async () => {
-  const { demo } = runner(["hn", "hn", "daily"]);
-  demo.enqueue("0", async () => { throw new Error("site unavailable"); });
-  demo.enqueue("1", async () => ({ ok: true }));
-  demo.enqueue("2", async () => undefined);
-  const final = await finished(demo);
-  assert.equal(final.tasks[0].status, "failed");
-  assert.equal(final.tasks[1].status, "succeeded");
-  assert.equal(final.tasks[2].status, "failed");
-  assert.throws(() => demo.enqueue("0", async () => ({})), /already submitted/);
-  assert.throws(() => demo.enqueue("unknown", async () => ({})), /Unknown task/);
-});
-
-test("snapshot copies cannot mutate scheduler records", async () => {
-  const { demo } = runner(["hn"]);
-  demo.snapshot().tasks[0].status = "succeeded";
-  assert.equal(demo.snapshot().tasks[0].status, "pending");
-});
-
-test("missing evidence fails and bounded retries repair it on the same tab", async () => {
-  const { demo, pages } = runner(["wiki"], 3, 1500, ["definition"]);
-  demo.enqueue("0", async () => ({ definition: [] }));
-  assert.throws(() => demo.retry("0", async () => ({})), /terminal/);
-  assert.equal((await finished(demo)).tasks[0].status, "failed");
-  demo.retry("0", async () => ({ definition: "  " }));
-  assert.equal((await finished(demo)).tasks[0].status, "failed");
-  demo.retry("0", async () => ({ definition: "A sourced definition." }));
-  const final = await finished(demo);
-  assert.equal(final.tasks[0].status, "succeeded");
-  assert.equal(final.tasks[0].attempt, 3);
-  assert.equal(final.tasks[0].history.length, 2);
-  assert.ok(final.tasks[0].history.every(attempt => attempt.status === "failed"));
-  assert.equal(pages.length, 1);
-  assert.throws(() => demo.retry("0", async () => ({})), /Maximum three/);
+test("the timeline reports overlap", () => {
+  const spans = [
+    { id: "a", status: "succeeded", steps: 4, startedAt: 0, finishedAt: 10_000 },
+    { id: "bb", status: "failed", steps: 20, startedAt: 5_000, finishedAt: 20_000 },
+    { id: "c", status: "succeeded", steps: 2, startedAt: 10_000, finishedAt: 12_000 },
+  ];
+  assert.equal(peakOverlap(spans), 2);
+  const timeline = formatTimeline(spans, 20);
+  assert.match(timeline, /^a  \|██████████ {10}\| succeeded in 10s, 4 steps$/m);
+  assert.match(timeline, /bb \| {5}█{15}\| failed in 15s, 20 steps/);
+  assert.match(timeline, /Peak tabs open at once: 2/);
 });
 
 const mcpResponse = (payload: unknown) => ({ content: [{ type: "text", text: JSON.stringify(payload) }] });

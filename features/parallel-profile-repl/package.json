@@ -6,7 +6,8 @@
   "scripts": {
     "start": "tsx index.ts",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test runtime.test.ts"
+    "test": "tsx --test runtime.test.ts",
+    "smoke": "tsx smoke.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.71",

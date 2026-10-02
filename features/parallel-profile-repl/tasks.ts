@@ -3,10 +3,9 @@ export type Task = {
   site: "hacker-news" | "github" | "wikipedia" | "techmeme" | "daily-dev";
   url: string;
   purpose: string;
-  requiredFields?: string[];
 };
 
-// Any subset can be submitted. Tasks sharing a site reuse its tab, one at a time.
+// Each task gets its own tab and agent loop; tasks on the same site can run side by side.
 export const TASKS: Task[] = [
   { id: "top-stories", site: "hacker-news", url: "https://news.ycombinator.com/", purpose: "Find discussions attracting developer attention, ranked by comment count." },
   { id: "new-projects", site: "hacker-news", url: "https://news.ycombinator.com/show", purpose: "Collect new tools to evaluate, keeping project and discussion links separate." },
@@ -20,14 +19,3 @@ export const TASKS: Task[] = [
   { id: "industry-context", site: "techmeme", url: "https://techmeme.com/", purpose: "Find AI and developer-industry stories with multiple reporting sources to investigate." },
   { id: "practical-lessons", site: "daily-dev", url: "https://daily.dev/blog/", purpose: "Read a practical agent or browser-engineering article and collect its section outline and excerpts for the learning queue." },
 ];
-
-// Validate evidence shape without prescribing how the model reads each site.
-for (const task of TASKS) {
-  task.requiredFields = {
-    "hacker-news": ["stories"],
-    github: ["release", "upgradeNotes"],
-    wikipedia: ["definition", "context"],
-    techmeme: ["stories"],
-    "daily-dev": ["title", "outline", "excerpts"],
-  }[task.site];
-}
