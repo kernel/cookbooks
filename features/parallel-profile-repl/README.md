@@ -7,6 +7,13 @@ steps. The agents drive their tabs by writing Playwright code that runs in
 Kernel's [Browser REPL](https://www.kernel.sh/docs/browsers/code-mode-webmcp)
 through the Kernel MCP server.
 
+## When to use this
+
+Use this pattern when several tasks need the same profile at the same time and
+that profile has to stay in write mode, so changes made during the run (cookies,
+storage, sign-in state) are saved back to it. Only one browser can save changes to
+a profile at a time, so the tasks share that browser and each works in its own tab.
+
 ```
 top-stories          |███████                                           | succeeded in 10s, 2 steps
 new-projects         |███████████                                       | succeeded in 16s, 3 steps
