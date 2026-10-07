@@ -1,0 +1,22 @@
+{
+  "name": "parallel-profile-executors",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test schedule.test.ts",
+    "smoke": "tsx smoke.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^4.0.71",
+    "@onkernel/sdk": "0.120.0",
+    "ai": "^7.0.127"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
