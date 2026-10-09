@@ -39,10 +39,19 @@ export function normalizeSubmission(value: unknown): Submission {
   return { summary: String(input.summary ?? ""), findings, limitations };
 }
 
+const escapeMarkdown = (text: string) => text.replace(/\s+/g, " ").trim().replace(/[\\[\]<>]/g, "\\$&");
+
+function formatFinding({ text, url }: Submission["findings"][number]) {
+  const href = URL.canParse(url) ? new URL(url) : undefined;
+  return href?.protocol === "http:" || href?.protocol === "https:"
+    ? `- [${escapeMarkdown(text)}](<${href.href}>)`
+    : `- ${escapeMarkdown(text)} (${escapeMarkdown(url)})`;
+}
+
 export function formatBriefing(outcomes: Outcome[]) {
   const completed = outcomes.filter(outcome => outcome.status === "succeeded" && outcome.result);
   const sections = completed.map(outcome => {
-    const findings = outcome.result!.findings.map(finding => `- [${finding.text}](${finding.url})`).join("\n");
+    const findings = outcome.result!.findings.map(formatFinding).join("\n");
     const limitations = outcome.result!.limitations.map(limitation => `- ${limitation}`).join("\n");
     return `## ${outcome.id}\n\n${outcome.result!.summary}\n\n${findings || "No findings."}` +
       (limitations ? `\n\nLimitations:\n\n${limitations}` : "");
