@@ -126,5 +126,6 @@ browser past its eight-executor limit.
 - Public page structure changes. The agents inspect the current page rather than
   relying on hard-coded extraction selectors, but evidence should still be
   reviewed.
-- Normal exits and interrupts delete the browser. A force-kill leaves it until
-  its five-minute idle timeout.
+- Normal exits and interrupts delete the browser. A force-kill, or a second
+  Ctrl-C while the first one is still cleaning up, exits without deleting it and
+  leaves it until its five-minute idle timeout.
