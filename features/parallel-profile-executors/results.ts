@@ -64,7 +64,7 @@ export function createResultPublisher(
         await writeFile(new URL("snapshot.json", outputDir), JSON.stringify(snapshot(), null, 2));
         await writeFile(new URL("briefing.md", outputDir), briefing());
         onEvent(event);
-      });
+      }).catch(error => console.error(`Could not publish ${event.type} for ${event.taskId}: ${String(error)}`));
       return writes;
     },
   };
