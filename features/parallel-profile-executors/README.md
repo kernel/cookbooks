@@ -15,7 +15,7 @@ The example creates a connected tech and developer-news briefing from seven site
 | Simon Willison's Weblog | LLM and agent posts from the last 24 hours |
 | Ars Technica | AI policy changes and security incidents |
 | Techmeme | Industry stories and related reporting |
-| daily.dev | Practical engineering articles and excerpts |
+| Chrome for Developers | Practical browser-engineering articles and excerpts |
 
 ## When to use this
 

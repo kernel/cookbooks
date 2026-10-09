@@ -1,6 +1,6 @@
 export type Task = {
   id: string;
-  site: "hacker-news" | "github" | "kernel" | "simon-willison" | "ars-technica" | "techmeme" | "daily-dev";
+  site: "hacker-news" | "github" | "kernel" | "simon-willison" | "ars-technica" | "techmeme" | "chrome-developers";
   url: string;
   purpose: string;
 };
@@ -18,5 +18,5 @@ export const TASKS: Task[] = [
   { id: "ai-policy", site: "ars-technica", url: "https://arstechnica.com/ai/", purpose: "Find AI product and policy changes that affect developers, with the key facts from the most relevant article." },
   { id: "security-incidents", site: "ars-technica", url: "https://arstechnica.com/security/", purpose: "Find recent vulnerabilities and breaches affecting software, AI agents, or web infrastructure, with affected products and any fixes." },
   { id: "industry-context", site: "techmeme", url: "https://techmeme.com/", purpose: "Find AI and developer-industry stories with multiple reporting sources to investigate." },
-  { id: "practical-lessons", site: "daily-dev", url: "https://daily.dev/blog/", purpose: "Read a practical agent or browser-engineering article and collect its section outline and excerpts for the learning queue." },
+  { id: "practical-lessons", site: "chrome-developers", url: "https://developer.chrome.com/blog", purpose: "Read a practical agent or browser-engineering article and collect its section outline and excerpts for the learning queue." },
 ];
