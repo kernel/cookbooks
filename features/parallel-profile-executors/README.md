@@ -86,8 +86,8 @@ task catalog around one concurrency level.
 7. Every lifecycle event updates `updates.jsonl`, `snapshot.json`, and
    `briefing.md`. A caller can read completed results while other tasks are still
    browsing.
-8. After all tasks finish, the harness deletes the browser once and writes the
-   final `results.json` and timing chart.
+8. After all tasks finish, the harness writes the final `results.json` and timing
+   chart, then deletes the browser once.
 
 Each Playwright call is independent. The model receives `page` but cannot rely
 on local JavaScript variables surviving its next call. Browser state and the
