@@ -104,9 +104,9 @@ Each run writes to `artifacts/<run-id>/`:
 - `results.json`: final structured outcomes and timing;
 - `session.json`: private live-view metadata.
 
-If writing these live files fails, the error is logged and the run continues.
-That event is missing from `updates.jsonl`; `snapshot.json` and `briefing.md`
-catch up on the next event.
+If writing `updates.jsonl`, `snapshot.json`, or `briefing.md` fails, the error
+is logged and the run continues. That event is missing from `updates.jsonl`;
+the other two catch up on the next event.
 
 One task failing does not stop the other task agents. The process exits nonzero
 if any task fails. If deleting a task's executor fails, the error is recorded in
