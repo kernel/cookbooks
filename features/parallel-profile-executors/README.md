@@ -76,7 +76,7 @@ task catalog around one concurrency level.
    replaces pages restored from the profile with that single page before the
    session is ready.
 3. A deterministic pool starts at most `MAX_CONCURRENT_TASKS` task agents.
-4. Each task uses its task ID as a fixed executor name. Every
+4. Each task uses its pool slot's executor name (`lane-1`, `lane-2`, ...). Every
    `execute_playwright_code` call for that task carries the same executor, so its
    `page` stays bound to the same tab. Calls on different executors overlap.
 5. Agents keep all work in that page. They read link URLs and use `page.goto()`
@@ -106,7 +106,10 @@ Each run writes to `artifacts/<run-id>/`:
 
 One task failing does not stop the other task agents. The process exits nonzero
 if any task fails. If deleting a task's executor fails, the error is recorded in
-that task's `cleanupError` and its result is kept.
+that task's `cleanupError` and its result is kept. The next task in that slot
+retries the delete before it starts and fails if the executor still cannot be
+removed. Because slots reuse executor names, a failed delete never pushes the
+browser past its eight-executor limit.
 
 ## Limits
 

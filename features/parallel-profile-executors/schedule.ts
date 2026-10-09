@@ -1,7 +1,7 @@
-export async function runPool<T>(items: T[], limit: number, worker: (item: T) => Promise<void>, signal?: AbortSignal) {
+export async function runPool<T>(items: T[], limit: number, worker: (item: T, lane: number) => Promise<void>, signal?: AbortSignal) {
   const queue = [...items];
-  const lanes = Array.from({ length: Math.min(limit, queue.length) }, async () => {
-    while (queue.length && !signal?.aborted) await worker(queue.shift()!);
+  const lanes = Array.from({ length: Math.min(limit, queue.length) }, async (_, lane) => {
+    while (queue.length && !signal?.aborted) await worker(queue.shift()!, lane);
   });
   await Promise.all(lanes);
 }

@@ -2,24 +2,24 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { formatTimeline, peakOverlap, runPool } from "./schedule.js";
 
-test("the pool starts another task only after a running task releases its slot", async () => {
+test("the pool starts another task only after a running task releases its slot, on the same lane", async () => {
   const releases = new Map<number, () => void>();
-  const started: number[] = [];
+  const started: Array<[item: number, lane: number]> = [];
   let running = 0, peak = 0;
-  const run = runPool([1, 2, 3], 2, async item => {
-    started.push(item);
+  const run = runPool([1, 2, 3], 2, async (item, lane) => {
+    started.push([item, lane]);
     peak = Math.max(peak, ++running);
     await new Promise<void>(resolve => releases.set(item, resolve));
     running--;
   });
 
   await new Promise(resolve => setImmediate(resolve));
-  assert.deepEqual(started, [1, 2]);
+  assert.deepEqual(started, [[1, 0], [2, 1]]);
   assert.equal(peak, 2);
 
   releases.get(1)!();
   await new Promise(resolve => setImmediate(resolve));
-  assert.deepEqual(started, [1, 2, 3]);
+  assert.deepEqual(started, [[1, 0], [2, 1], [3, 0]]);
 
   releases.get(2)!();
   releases.get(3)!();

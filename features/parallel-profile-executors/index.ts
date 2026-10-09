@@ -44,14 +44,25 @@ async function main() {
     event => console.log(JSON.stringify(event)),
   );
 
-  async function runTask(task: Task) {
-    const executor = task.id;
+  async function deleteExecutor(executor: string) {
+    try { await kernel.browsers.playwright.executors.delete(executor, { id_or_name: sessionId! }); }
+    catch (error) { if (!(error instanceof NotFoundError)) throw error; }
+  }
+
+  // Executors are named per pool lane, so a failed delete can never push the browser past its executor limit.
+  const uncleanExecutors = new Set<string>();
+  async function runTask(task: Task, lane: number) {
+    const executor = `lane-${lane + 1}`;
     const outcome = outcomes.find(candidate => candidate.id === task.id)!;
     outcome.status = "running";
     outcome.startedAt = Date.now();
     await publisher.publish({ type: "task_started", taskId: task.id, executor, at: new Date().toISOString() });
     try {
       abort.signal.throwIfAborted();
+      if (uncleanExecutors.has(executor)) {
+        try { await deleteExecutor(executor); }
+        catch (error) { throw new Error(`Could not reset executor ${executor} left by an earlier task: ${String(error)}`); }
+      }
       const agent = new ToolLoopAgent({
         model,
         instructions,
@@ -91,9 +102,11 @@ async function main() {
       outcome.error = String(error);
     } finally {
       try {
-        await kernel.browsers.playwright.executors.delete(executor, { id_or_name: sessionId! });
+        await deleteExecutor(executor);
+        uncleanExecutors.delete(executor);
       } catch (error) {
-        if (!(error instanceof NotFoundError)) outcome.cleanupError = `Executor cleanup failed: ${String(error)}`;
+        uncleanExecutors.add(executor);
+        outcome.cleanupError = `Executor cleanup failed: ${String(error)}`;
       }
       outcome.finishedAt = Date.now();
       if (outcome.status === "succeeded") {
