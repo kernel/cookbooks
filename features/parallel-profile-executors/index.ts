@@ -122,15 +122,15 @@ async function main() {
   } finally {
     process.removeListener("SIGINT", interrupt);
     process.removeListener("SIGTERM", interrupt);
-    if (sessionId) {
-      try { await kernel.browsers.deleteByID(sessionId); }
-      catch (error) { if (!(error instanceof NotFoundError)) throw error; }
-    }
     if (outcomes.some(outcome => outcome.finishedAt)) {
       await writeFile(new URL("results.json", outputDir), JSON.stringify({ runId, model: model.modelId, route,
         maxConcurrentTasks, stepsPerTask, tasks: outcomes }, null, 2));
       console.log("\n" + formatTimeline(outcomes.filter(outcome => outcome.finishedAt)));
       console.log(`\nartifacts: ${outputDir.pathname}`);
+    }
+    if (sessionId) {
+      try { await kernel.browsers.deleteByID(sessionId); }
+      catch (error) { if (!(error instanceof NotFoundError)) throw error; }
     }
   }
   if (outcomes.some(outcome => outcome.status !== "succeeded")) process.exitCode = 1;
