@@ -15,9 +15,9 @@ function integerEnv(name: string, fallback: number, min: number, max: number) {
 
 async function main() {
   const { model, route } = selectModel();
-  const requested = process.env.TASK_IDS?.split(",");
+  const requested = process.env.TASK_IDS?.split(",").map(id => id.trim()).filter(Boolean);
   if (requested?.some(id => !TASKS.some(task => task.id === id))) throw new Error("TASK_IDS contains an unknown task");
-  const tasks = requested ? TASKS.filter(task => requested.includes(task.id)) : TASKS;
+  const tasks = requested?.length ? TASKS.filter(task => requested.includes(task.id)) : TASKS;
   const maxConcurrentTasks = integerEnv("MAX_CONCURRENT_TASKS", 4, 1, 8);
   const stepsPerTask = integerEnv("STEPS_PER_TASK", 20, 1, 100);
   const profileName = process.env.PROFILE_NAME ?? "parallel-executors-agent-demo";
