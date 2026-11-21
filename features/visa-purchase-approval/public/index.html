@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>hosted visa approval example · KERNEL</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <img src="/wordmark.svg" alt="KERNEL" width="96" />
+      <h1>review your purchase</h1>
+      <p>
+        approve a purchase with your saved card, then let your agent continue
+        checkout.
+      </p>
+      <dl>
+        <dt>merchant</dt>
+        <dd id="merchant"></dd>
+        <dt>total</dt>
+        <dd id="amount"></dd>
+      </dl>
+      <button id="start" disabled>request purchase approval</button>
+      <a id="approval" target="_blank" rel="noopener noreferrer" hidden
+        >open hosted approval</a
+      >
+      <button id="refresh" hidden>check status</button>
+      <p id="status" role="status">loading…</p>
+      <p class="note">
+        this example authorizes a purchase. it does not submit a seller's
+        checkout or charge your card.
+      </p>
+    </main>
+  </body>
+</html>

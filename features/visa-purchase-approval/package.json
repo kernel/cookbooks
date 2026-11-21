@@ -1,0 +1,9 @@
+{
+  "name": "visa-purchase-approval-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun server.ts",
+    "test": "bun test"
+  }
+}
